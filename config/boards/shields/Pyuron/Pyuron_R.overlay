@@ -41,6 +41,16 @@
     device = <&trackball_R>;
 };
 
+/* 右ハーフ：右splitに実デバイスを接続（必須） */
+&trackball_split_R {
+    device = <&trackball_R>;
+};
+
+/* 右ハーフ：左splitは実体が無いので無効化（必須） */
+&trackball_split_L {
+    status = "disabled";
+};
+
 &spi0 {
     status = "okay";
     cs-gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
