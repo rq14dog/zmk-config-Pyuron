@@ -41,10 +41,10 @@
 
         MAC_BASE {
             bindings = <
-&kp Q             &kp W                  &kp E      &kp R         &kp T           &kp Y        &kp U          &kp I        &kp O          &kp P
-&kp A             &kp S                  &kp D      &kp F         &kp G           &kp H        &kp J          &kp K        &kp L          &kp MINUS
-&mt LEFT_SHIFT Z  &kp X                  &kp C      &kp V         &kp B           &kp LANG1    &kp LANG2      &kp N        &kp M          &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LCTRL  &kp LEFT_WIN  &lt 4 LEFT_ALT  &lt 2 SPACE  &kp BACKSPACE  &lt 4 ENTER  &kp RIGHT_ALT  &kp ESC
+&kp Q             &kp W                  &kp E         &kp R             &kp T           &kp Y        &kp U          &kp I        &kp O          &kp P
+&kp A             &kp S                  &kp D         &kp F             &kp G           &kp H        &kp J          &kp K        &kp L          &kp MINUS
+&mt LEFT_SHIFT Z  &kp X                  &kp C         &kp V             &kp B           &kp LANG1    &kp LANG2      &kp N        &kp M          &kp COMMA
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LEFT_ALT  &kp LEFT_CONTROL  &lt 4 LEFT_WIN  &lt 2 SPACE  &kp BACKSPACE  &lt 4 ENTER  &kp RIGHT_ALT  &kp ESC
             >;
         };
 
