@@ -39,7 +39,7 @@
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        MAC_BASE {
             bindings = <
 &kp Q             &kp W                  &kp E      &kp R         &kp T           &kp Y        &kp U          &kp I        &kp O          &kp P
 &kp A             &kp S                  &kp D      &kp F         &kp G           &kp H        &kp J          &kp K        &kp L          &kp MINUS
@@ -48,7 +48,7 @@
             >;
         };
 
-        layer_1 {
+        MAC_OPS {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &kp F1  &kp F2      &kp N1  &kp N2  &kp N3
 &trans  &trans  &trans  &trans  &trans  &kp F6  &kp F7      &kp N4  &kp N5  &kp N6
@@ -57,7 +57,7 @@
             >;
         };
 
-        layer_2 {
+        WIN_BASE {
             bindings = <
 &kp Q             &kp W                  &kp E      &kp R     &kp T     &kp Y        &kp U      &kp I        &kp O   &kp P
 &kp A             &kp S                  &kp D      &kp F     &kp G     &kp H        &kp J      &kp K        &kp L   &kp MINUS
@@ -66,7 +66,7 @@
             >;
         };
 
-        layer_3 {
+        WIN_OPS {
             bindings = <
 &kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans   &trans  &trans  &trans  &trans  &trans
 &kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END  &trans  &trans  &trans  &trans  &trans
@@ -75,21 +75,12 @@
             >;
         };
 
-        layer_4 {
+        NUM_SYM {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp N1  &kp N2  &kp N3
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp N4  &kp N5  &kp N6
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp N7
 &kp N8  &kp N9  &trans  &trans  &trans  &trans  &trans  &trans  &kp N0  &kp DOT
-            >;
-        };
-
-        SYSTEM {
-            bindings = <
-&trans  &trans      &trans  &trans  &trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&trans  &trans      &trans  &trans  &trans  &trans        &trans        &trans        &trans        &trans
-&trans  &trans      &trans  &trans  &trans  &trans        &bootloader   &trans        &trans        &trans
-&trans  &bt BT_CLR  &trans  &trans  &trans  &trans        &trans        &trans        &trans        &bt BT_CLR_ALL
             >;
         };
 
@@ -99,6 +90,15 @@
 &trans  &trans  &trans  &trans  &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans    &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans    &trans
+            >;
+        };
+
+        SYSTEM {
+            bindings = <
+&trans  &trans      &trans  &trans  &trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+&trans  &trans      &trans  &trans  &trans  &trans        &trans        &trans        &trans        &trans
+&trans  &trans      &trans  &trans  &trans  &trans        &bootloader   &trans        &trans        &trans
+&trans  &bt BT_CLR  &trans  &trans  &trans  &trans        &trans        &trans        &trans        &bt BT_CLR_ALL
             >;
         };
     };
