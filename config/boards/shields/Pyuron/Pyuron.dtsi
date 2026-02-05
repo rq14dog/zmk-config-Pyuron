@@ -22,23 +22,32 @@ split_inputs {
       trackball_split_L: trackball_split_L@0 {
         compatible = "zmk,input-split";
         reg = <0>;
+
+      trackball_split_R: trackball_split_R@1 {
+        compatible = "zmk,input-split";
+        reg = <1>;
       };
     };
 
+    /* 左：スクロール */
     trackball_listener_L: trackball_listener_L {
       compatible = "zmk,input-listener";
       status = "disabled";
       device = <&trackball_split_L>;
 
         input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>,
-                           <&zip_xy_scaler 1 16>,
                            <&zip_scroll_scaler 1 5>,
                            <&zip_xy_to_scroll_mapper>;
     };
 
     trackball_listener_R: trackball_listener_R {
       compatible = "zmk,input-listener";
-      status = "disabled";    
+      status = "disabled";
+      device = <&trackball_split_R>;
+    /* 右：マウス（ポインタ移動） */
+    input-processors =
+        <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>,
+        <&zip_xy_scaler 1 8>;
     };
 
     kscan0: kscan {
