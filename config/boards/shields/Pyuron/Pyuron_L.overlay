@@ -33,7 +33,9 @@
 &trackball_split_L {
     device = <&trackball_L>;
 };
-
+&trackball_split_R {
+  status = "disabled";
+};
 &spi0 {
     status = "okay";
     compatible = "nordic,nrf-spim";
