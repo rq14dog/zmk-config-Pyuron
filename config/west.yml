@@ -18,6 +18,7 @@ manifest:
       remote: sekigon-gonnoc
       revision: main
     - name: zmk-rgbled-widget
+      url: https://github.com/caksoylar/zmk-rgbled-widget
       revision: v0.3
   self:
     path: config
