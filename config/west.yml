@@ -6,6 +6,9 @@ manifest:
       url-base: https://github.com/MeowCatpawkittie 
     - name: sekigon-gonnoc
       url-base: https://github.com/sekigon-gonnoc
+    - name: caksoylar  # <-- new entry
+      url-base: https://github.com/caksoylar
+      
   projects:
     - name: zmk
       remote: zmkfirmware
