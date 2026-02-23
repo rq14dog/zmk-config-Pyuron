@@ -53,3 +53,9 @@
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
     };
 };
+
+aliases {
+led-red   = &led0;   /* P0.26 赤 */
+led-green = &led1;   /* P0.30 緑 */
+led-blue  = &led2;   /* P0.06 青 */
+};
