@@ -16,15 +16,6 @@
                 <&gpio0 10 GPIO_ACTIVE_HIGH>;
 };
 
-&zip_temp_layer {
-    excluded-positions = <
-        17 // K
-        18 // L
-    >;
-    require-prior-idle-ms = <200>;
-    // トラボ誤爆防止
-};
-
 &pinctrl {
     spi0_default: spi0_default {
         group1 {
