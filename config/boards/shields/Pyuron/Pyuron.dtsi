@@ -43,6 +43,14 @@ split_inputs {
             <&zip_temp_layer 6 10000>;
     };
 
+&zip_temp_layer {
+    excluded-positions = <
+        17 // K
+        18 // L
+    >;
+    require-prior-idle-ms = <200>;
+    // トラボ誤爆防止
+};
     default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
         columns = <11>;
