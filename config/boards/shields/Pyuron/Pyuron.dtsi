@@ -126,3 +126,20 @@ split_inputs {
     require-prior-idle-ms = <200>;
     // トラボ誤爆防止
 };
+/ {
+    behaviors {
+        def_layer_0: def_layer_0 {
+            compatible = "zmk,behavior-default-layer";
+            #binding-cells = <1>;
+        };
+    };
+};
+/ {
+    macros {
+        init_def_layer: init_def_layer {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&def_layer_0 0>;
+        };
+    };
+};
