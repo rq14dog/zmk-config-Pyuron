@@ -39,12 +39,21 @@
     keymap {
         compatible = "zmk,keymap";
 
+        NUM_SYS {
+            bindings = <
+&kp UP_ARROW  &kp DOWN_ARROW  &kp LEFT  &kp RIGHT         &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
+&kp AT_SIGN   &kp TILDE       &kp PIPE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp ASTERISK  &kp N4      &kp N5  &kp N6   &kp PLUS
+&kp F6        &kp F7          &kp F8    &kp F9            &kp F10            &trans        &trans      &kp N0  &kp N7   &kp N8
+&kp N9        &kp EQUAL       &trans    &trans            &trans             &trans        &kp DELETE  &trans  &kp DOT  &kp RIGHT_SHIFT
+            >;
+        };
+
         MAC_BASE {
             bindings = <
 &kp Q             &kp W                  &kp E         &kp R      &kp T         &kp Y        &kp U          &kp I        &kp O      &kp P
 &kp A             &kp S                  &kp D         &kp F      &kp G         &kp H        &kp J          &kp K        &kp L      &kp MINUS
 &mt LEFT_SHIFT Z  &kp X                  &kp C         &kp V      &kp B         &kp LANG1    &kp LANG2      &kp N        &kp M      &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LEFT_ALT  &kp LCTRL  &kp LEFT_GUI  &lt 1 SPACE  &kp BACKSPACE  &lt 4 ENTER  &kp RCTRL  &lt 5 ESC
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LEFT_ALT  &kp LCTRL  &kp LEFT_GUI  &lt 6 SPACE  &kp BACKSPACE  &lt 6 ENTER  &kp RCTRL  &lt 6 ESC
             >;
         };
 
@@ -62,7 +71,7 @@
 &kp Q             &kp W                  &kp E     &kp R     &kp T      &kp Y        &kp U      &kp I        &kp O      &kp P
 &kp A             &kp S                  &kp D     &kp F     &kp G      &kp H        &kp J      &kp K        &kp L      &kp MINUS
 &mt LEFT_SHIFT Z  &kp X                  &kp C     &kp V     &kp B      &kp LANG1    &kp LANG2  &kp N        &kp M      &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LALT  &kp LGUI  &kp LCTRL  &lt 3 SPACE  &kp BSPC   &lt 4 ENTER  &kp LCTRL  &lt 6 ESC
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LALT  &kp LGUI  &kp LCTRL  &lt 0 SPACE  &kp BSPC   &lt 6 ENTER  &kp LCTRL  &lt 1 ESC
             >;
         };
 
@@ -72,15 +81,6 @@
 &kp TAB  &kp LC(LG(LEFT_ARROW))  &kp LC(LS(T))  &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))    &trans  &kp F2        &kp LG(D)      &kp INSERT       &trans
 &trans   &kp LC(HOME)            &trans         &kp LC(END)              &kp PRINTSCREEN  &trans  &trans        &trans         &trans           &trans
 &trans   &trans                  &trans         &trans                   &trans           &trans  &trans        &trans         &trans           &kp LA(F4)
-            >;
-        };
-
-        NUM_SYS {
-            bindings = <
-&kp UP_ARROW  &kp DOWN_ARROW  &kp LEFT  &kp RIGHT         &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
-&kp AT_SIGN   &kp TILDE       &kp PIPE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp ASTERISK  &kp N4      &kp N5  &kp N6   &kp PLUS
-&kp F6        &kp F7          &kp F8    &kp F9            &kp F10            &trans        &trans      &kp N0  &kp N7   &kp N8
-&kp N9        &kp EQUAL       &trans    &trans            &trans             &trans        &kp DELETE  &trans  &kp DOT  &kp RIGHT_SHIFT
             >;
         };
 
