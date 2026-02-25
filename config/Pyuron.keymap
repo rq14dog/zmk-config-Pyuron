@@ -48,15 +48,6 @@
             >;
         };
 
-        MAC_BASE {
-            bindings = <
-&kp Q             &kp W                  &kp E         &kp R      &kp T         &kp Y        &kp U          &kp I        &kp O      &kp P
-&kp A             &kp S                  &kp D         &kp F      &kp G         &kp H        &kp J          &kp K        &kp L      &kp MINUS
-&mt LEFT_SHIFT Z  &kp X                  &kp C         &kp V      &kp B         &kp LANG1    &kp LANG2      &kp N        &kp M      &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LEFT_ALT  &kp LCTRL  &kp LEFT_GUI  &lt 6 SPACE  &kp BACKSPACE  &lt 6 ENTER  &kp RCTRL  &lt 6 ESC
-            >;
-        };
-
         MAC_OPS {
             bindings = <
 &trans   &kp LG(LS(TAB))     &kp LC(UP_ARROW)    &kp LG(TAB)          &kp F11               &trans  &kp LA(LG(LEFT))  &kp LA(LG(RIGHT))  &kp LC(LG(F))  &kp LG(LC(Q))
@@ -71,7 +62,7 @@
 &kp Q             &kp W                  &kp E     &kp R     &kp T      &kp Y        &kp U      &kp I        &kp O      &kp P
 &kp A             &kp S                  &kp D     &kp F     &kp G      &kp H        &kp J      &kp K        &kp L      &kp MINUS
 &mt LEFT_SHIFT Z  &kp X                  &kp C     &kp V     &kp B      &kp LANG1    &kp LANG2  &kp N        &kp M      &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LALT  &kp LGUI  &kp LCTRL  &lt 0 SPACE  &kp BSPC   &lt 6 ENTER  &kp LCTRL  &lt 1 ESC
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LALT  &kp LGUI  &kp LCTRL  &lt 0 SPACE  &kp BSPC   &lt 6 ENTER  &kp LCTRL  &lt 5 ESC
             >;
         };
 
@@ -81,6 +72,15 @@
 &kp TAB  &kp LC(LG(LEFT_ARROW))  &kp LC(LS(T))  &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))    &trans  &kp F2        &kp LG(D)      &kp INSERT       &trans
 &trans   &kp LC(HOME)            &trans         &kp LC(END)              &kp PRINTSCREEN  &trans  &trans        &trans         &trans           &trans
 &trans   &trans                  &trans         &trans                   &trans           &trans  &trans        &trans         &trans           &kp LA(F4)
+            >;
+        };
+
+        MAC_BASE {
+            bindings = <
+&kp Q             &kp W                  &kp E         &kp R      &kp T         &kp Y        &kp U          &kp I        &kp O      &kp P
+&kp A             &kp S                  &kp D         &kp F      &kp G         &kp H        &kp J          &kp K        &kp L      &kp MINUS
+&mt LEFT_SHIFT Z  &kp X                  &kp C         &kp V      &kp B         &kp LANG1    &kp LANG2      &kp N        &kp M      &kp COMMA
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp LEFT_ALT  &kp LCTRL  &kp LEFT_GUI  &lt 6 SPACE  &kp BACKSPACE  &lt 6 ENTER  &kp RCTRL  &lt 6 ESC
             >;
         };
 
