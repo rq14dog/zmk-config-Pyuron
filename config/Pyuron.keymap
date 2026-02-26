@@ -36,10 +36,10 @@
             label = "NEW_MACRO";
         };
 
-        bt_win: bt_win_macro {
+        bt_win: new_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&bt BT_SEL 1>, <&macro_wait_time 200>, <&to 2>;
+            bindings = <&bt BT_SEL 2>, <&macro_wait_time 200>, <&to 2>;
 
             label = "NEW_MACRO";
         };
