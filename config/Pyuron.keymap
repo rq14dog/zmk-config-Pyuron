@@ -23,10 +23,6 @@
     };
 };
 
-/ {
-    behaviors {
-    };
-
     macros {
         bt_mac: bt_mac_macro {
             compatible = "zmk,behavior-macro";
