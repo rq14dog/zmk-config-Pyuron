@@ -10,7 +10,12 @@
     quick-tap-ms = <0>;
 };
 
-&zip_temp_layer { excluded-positions = <17 18 19 20 21>; };
+&zip_temp_layer { 
+    excluded-positions = <
+        17 18
+    >;
+    require-prior-idle-ms = <200>;
+};
 
 / {
     combos { compatible = "zmk,combos"; };
