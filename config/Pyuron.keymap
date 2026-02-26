@@ -16,7 +16,7 @@
     lt_to_layer_0: lt_to_layer_0 {
         compatible = "zmk,behavior-hold-tap";
         label = "LAYER_TAP_TO_0";
-        bindings = <&mo>, <&to_layer_0>;
+        bindings = <&mo>, <&bt_mac>;
 
         #binding-cells = <2>;
         tapping-term-ms = <200>;
@@ -28,10 +28,19 @@
     };
 
     macros {
-        to_layer_0: new_macro {
+        bt_mac: new_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&bt BT_SEL 0>;
+            bindings = <&bt BT_SEL 0>, <&macro_wait_time 200>, <&to 0>;
+
+            label = "NEW_MACRO";
+        };
+
+        bt_win: new_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&bt BT_SEL 1>, <&macro_wait_time 200>, <&to 2>;
+
             label = "NEW_MACRO";
         };
     };
@@ -39,7 +48,7 @@
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        MAC_BASE {
             bindings = <
 &kp Q             &kp W                  &kp E         &kp R      &kp T         &kp Y        &kp U          &kp I        &kp O      &kp P
 &kp A             &kp S                  &kp D         &kp F      &kp G         &kp H        &kp J          &kp K        &kp L      &kp MINUS
