@@ -10,9 +10,7 @@
     quick-tap-ms = <0>;
 };
 
-&zip_temp_layer {
-    excluded-positions = <17 18>;
-};
+&zip_temp_layer { excluded-positions = <17 18>; };
 
 / {
     combos { compatible = "zmk,combos"; };
@@ -58,7 +56,7 @@
 
         NUM_SYS {
             bindings = <
-&kp D        &kp DOWN_ARROW  &kp LEFT  &kp RIGHT         &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
+&to 0        &kp DOWN_ARROW  &kp LEFT  &kp RIGHT         &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
 &kp AT_SIGN  &kp TILDE       &kp PIPE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp ASTERISK  &kp N4      &kp N5  &kp N6   &kp PLUS
 &kp F6       &kp F7          &kp F8    &kp F9            &kp F10            &trans        &trans      &kp N0  &kp N7   &kp N8
 &kp N9       &kp EQUAL       &trans    &trans            &to 0              &trans        &kp DELETE  &trans  &kp DOT  &kp RIGHT_SHIFT
