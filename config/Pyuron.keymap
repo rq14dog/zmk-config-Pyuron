@@ -28,7 +28,7 @@
     };
 
     macros {
-        bt_mac: new_macro {
+        bt_mac: bt_mac_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&bt BT_SEL 0>, <&macro_wait_time 200>, <&to 0>;
@@ -36,7 +36,7 @@
             label = "NEW_MACRO";
         };
 
-        bt_win: new_macro {
+        bt_win: bt_win_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&bt BT_SEL 1>, <&macro_wait_time 200>, <&to 2>;
