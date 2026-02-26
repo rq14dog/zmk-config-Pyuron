@@ -22,7 +22,7 @@
         tapping-term-ms = <200>;
     };
 };
-
+/ {
     macros {
         bt_mac: bt_mac_macro {
             compatible = "zmk,behavior-macro";
