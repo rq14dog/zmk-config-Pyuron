@@ -9,7 +9,9 @@
     flavor = "balanced";
     quick-tap-ms = <0>;
 };
+
 &zip_temp_layer { excluded-positions = <17 18 19 20 21>; };
+
 / {
     combos { compatible = "zmk,combos"; };
 
@@ -72,10 +74,10 @@
 
         MOUSE {
             bindings = <
-&to 0   &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &mkp MB1  &mkp MB2  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans
+&to 0   &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &mkp MB1  &to 0   &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans
             >;
         };
     };
