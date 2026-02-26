@@ -10,7 +10,6 @@
     quick-tap-ms = <0>;
 };
 
-&zip_temp_layer { excluded-positions = <17 18>; };
 
 / {
     combos { compatible = "zmk,combos"; };
