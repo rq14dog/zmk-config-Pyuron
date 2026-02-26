@@ -60,10 +60,3 @@
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
     };
 };
-/ {
-    aliases {
-        led-red   = &led0;
-        led-green = &led1;
-        led-blue  = &led2;
-    };
-};
