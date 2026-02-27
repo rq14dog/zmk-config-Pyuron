@@ -19,7 +19,14 @@
 };
 
 / {
-    combos { compatible = "zmk,combos"; };
+    combos {
+        compatible = "zmk,combos";
+        combo_to_0 {
+            timeout-ms = <50>;
+            key-positions = <0 39>;
+            bindings = <&to 0>;
+        };
+    };
 
     keymap {
         compatible = "zmk,keymap";
