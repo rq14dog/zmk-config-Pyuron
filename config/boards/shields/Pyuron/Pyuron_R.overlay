@@ -57,6 +57,10 @@
     };
 };
 
+&xiao_serial {
+    status = "disabled";
+};
+
 &trackball_listener_L {
     status = "okay";
 };
