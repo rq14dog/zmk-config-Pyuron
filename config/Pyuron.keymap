@@ -73,16 +73,16 @@
 &kp Q             &kp W                  &kp E    &kp R     &kp T      &kp Y        &kp U      &kp I        &kp O      &kp P
 &kp A             &kp S                  &kp D    &kp F     &kp G      &kp H        &kp J      &kp K        &kp L      &kp MINUS
 &mt LEFT_SHIFT Z  &kp X                  &kp C    &kp V     &kp B      &kp LANG1    &kp LANG2  &kp N        &kp M      &kp COMMA
-&kp DOT           &mt RIGHT_SHIFT SLASH  &kp TAB  &kp LGUI  &kp LCTRL  &lt 3 SPACE  &kp BSPC   &lt 4 ENTER  &kp LCTRL  &lt 5 ESC
+&kp DOT           &mt RIGHT_SHIFT SLASH  &kp TAB  &kp LGUI  &kp LCTRL  &lt 4 SPACE  &kp BSPC   &lt 3 ENTER  &kp LCTRL  &lt 5 ESC
             >;
         };
 
         WIN_OPS {
             bindings = <
-&trans   &kp LS(LA(TAB))         &kp LG(TAB)    &kp LA(TAB)              &kp LG(D)        &trans  &kp LA(LEFT)  &kp LA(RIGHT)  &kp PAUSE_BREAK  &kp LG(L)
-&kp TAB  &kp LC(LG(LEFT_ARROW))  &kp LC(LS(T))  &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))    &trans  &kp F2        &kp LG(D)      &kp INSERT       &trans
-&trans   &kp LC(HOME)            &trans         &kp LC(END)              &kp PRINTSCREEN  &trans  &trans        &trans         &trans           &trans
-&trans   &trans                  &trans         &trans                   &trans           &trans  &trans        &trans         &trans           &kp LA(F4)
+&trans  &kp LS(LA(TAB))         &kp LG(TAB)    &kp LA(TAB)              &kp LG(D)        &kp RCTRL  &kp LA(LEFT)  &kp LA(RIGHT)  &kp PAUSE_BREAK  &kp LG(L)
+&trans  &kp LC(LG(LEFT_ARROW))  &kp LC(LS(T))  &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))    &trans     &kp F2        &kp LG(D)      &kp INSERT       &trans
+&trans  &kp LC(HOME)            &trans         &kp LC(END)              &kp PRINTSCREEN  &trans     &trans        &trans         &trans           &trans
+&trans  &trans                  &trans         &trans                   &trans           &trans     &trans        &trans         &trans           &kp LA(F4)
             >;
         };
 
