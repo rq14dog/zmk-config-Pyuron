@@ -40,6 +40,7 @@ split_inputs {
       status = "disabled";
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_xy_scaler 3 4>,
             <&zip_temp_layer 6 1000>;
     };
 
