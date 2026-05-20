@@ -83,7 +83,7 @@
 
         NUM_SYS {
             bindings = <
-&kp PAGE_UP  &kp UP_ARROW    &kp AT_SIGN  &kp PAGE_DOWN     &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
+&kp PAGE_UP  &kp UP_ARROW    &kp PAGE_DOWN  &kp AT_SIGN     &kp TILDE          &kp FSLH      &kp N1      &kp N2  &kp N3   &kp MINUS
 &kp LEFT     &kp DOWN_ARROW  &kp RIGHT    &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp ASTERISK  &kp N4      &kp N5  &kp N6   &kp PLUS
 &kp F6       &kp F7          &kp F8       &kp F9            &kp F10            &trans        &trans      &kp N0  &kp N7   &kp N8
 &kp N9       &kp EQUAL       &trans       &trans            &to 0              &trans        &kp DELETE  &trans  &kp DOT  &kp RIGHT_SHIFT
