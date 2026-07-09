@@ -108,6 +108,58 @@ MOUSE_BUTTONS = {
     "MB2": "RClick",
 }
 
+# Function-name labels for OPS-layer shortcuts, keyed by [layer_name][key-code
+# string] (the key-code string is what label_kp() would otherwise display,
+# e.g. "Cmd+Shift+4"). Layer-scoped because the same key code can mean
+# different things on different layers (e.g. F2 is unmapped on MAC_OPS but
+# "名前変更" on WIN_OPS). Only shortcuts explicitly reviewed and confirmed
+# get an entry; anything missing falls back to showing the raw key code.
+SHORTCUT_LABELS: dict[str, dict[str, str]] = {
+    "MAC_OPS": {
+        "Ctrl+Cmd+Space": "絵文字/記号",
+        "Cmd+Shift+Tab": "前のアプリ",
+        "Cmd+Tab": "アプリ切替",
+        "Ctrl+Up": "Mission Control",
+        "Cmd+[": "戻る",
+        "Cmd+]": "進む",
+        "Ctrl+Cmd+F": "フルスクリーン",
+        "Cmd+Ctrl+Q": "画面ロック",
+        "Cmd+Shift+3": "全画面スクショ",
+        "Cmd+Shift+4": "範囲スクショ",
+        "Alt+Cmd+Esc": "強制終了",
+        "Cmd+M": "最小化",
+        "Cmd+Q": "終了",
+        "Ctrl+Left": "デスクトップ移動",
+        "Ctrl+Right": "デスクトップ移動",
+        "Shift+Cmd+T": "閉じたタブを復元",
+        "Cmd+Left": "行頭",
+        "Ctrl+Down": "App Exposé",
+        "Cmd+Right": "行末",
+    },
+    "WIN_OPS": {
+        "Alt+Tab": "アプリ切替",
+        "Win+Tab": "タスクビュー",
+        "Alt+Left": "戻る",
+        "Alt+Right": "進む",
+        "Win+Up": "最大化",
+        "Win+L": "画面ロック",
+        "Win+Shift+S": "範囲スクショ",
+        "Ctrl+Shift+Esc": "タスクマネージャ",
+        "Win+Down": "最小化",
+        "Alt+F4": "終了",
+        "Ctrl+Win+Left": "デスクトップ移動",
+        "Ctrl+Win+Right": "デスクトップ移動",
+        "Ctrl+Home": "先頭",
+        "Ctrl+End": "末尾",
+        "PrtSc": "スクショ",
+        "Win+.": "絵文字/記号",
+        "Shift+Alt+Tab": "前のアプリ",
+        "Win+D": "デスクトップ表示",
+        "Ctrl+Shift+T": "閉じたタブを復元",
+        "F2": "名前変更",
+    },
+}
+
 LAYER_NAMES = {
     "0": "Mac",
     "1": "Mac Ops",
@@ -179,7 +231,10 @@ HEIGHT = TITLE_H + len(LAYER_GRID) * CARD_H + (len(LAYER_GRID) - 1) * ROW_GAP + 
 
 
 def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
+    # Hiragino comes first: it covers both Japanese function-name labels
+    # (e.g. "範囲スクショ") and Latin key names in one consistent family.
     candidates = [
+        "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc" if bold else "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
         "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold else "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/SFNS.ttf",
         "/System/Library/Fonts/SFNSMono.ttf",
@@ -197,7 +252,10 @@ FONTS = {
     "note": load_font(20),
     "key": load_font(22, bold=True),
     "key_small": load_font(16, bold=True),
+    "key_tiny": load_font(13, bold=True),
     "hint": load_font(15, bold=True),
+    "hint_small": load_font(12, bold=True),
+    "hint_tiny": load_font(10, bold=True),
     "token": load_font(14, bold=True),
 }
 
@@ -302,6 +360,9 @@ def label_for(binding: str, layer_name: str) -> Label:
         return Label(key_name(parts[2], layer_name), hint=f"hold {key_name(parts[1], layer_name)}", kind="layer")
     if behavior == "&kp" and len(parts) > 1:
         primary = label_kp(parts[1], layer_name)
+        function_name = SHORTCUT_LABELS.get(layer_name, {}).get(primary)
+        if function_name:
+            return Label(function_name, hint=primary, kind="mod")
         if is_shortcut(primary):
             return Label(primary, kind="mod")
         if re.fullmatch(r"[A-Z]", primary):
@@ -326,6 +387,103 @@ def centered_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int, int, int], text
     w, h = text_size(draw, text, font)
     x1, y1, x2, y2 = xy
     draw.text((x1 + (x2 - x1 - w) / 2, y1 + (y2 - y1 - h) / 2 - 1), text, font=font, fill=fill)
+
+
+CJK_PATTERN = re.compile(r"[぀-ヿ㐀-鿿＀-￯]")
+
+
+def text_units(text: str) -> list[str]:
+    """Split text into wrap units: one per CJK character, whole runs for Latin words."""
+    units: list[str] = []
+    buf = ""
+    for ch in text:
+        if CJK_PATTERN.match(ch):
+            if buf:
+                units.append(buf)
+                buf = ""
+            units.append(ch)
+        elif ch == " ":
+            if buf:
+                units.append(buf)
+                buf = ""
+        else:
+            buf += ch
+    if buf:
+        units.append(buf)
+    return units
+
+
+def _joins_without_space(left: str, right: str) -> bool:
+    return not (left[-1:].isascii() and left[-1:].isalnum() and right[:1].isascii() and right[:1].isalnum())
+
+
+def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_width: int) -> list[str]:
+    units = text_units(text)
+    if not units:
+        return []
+    lines: list[str] = []
+    current = ""
+    for unit in units:
+        if not current:
+            candidate = unit
+        else:
+            sep = "" if _joins_without_space(current, unit) else " "
+            candidate = current + sep + unit
+        width, _ = text_size(draw, candidate, font)
+        if width <= max_width or not current:
+            current = candidate
+        else:
+            lines.append(current)
+            current = unit
+    if current:
+        lines.append(current)
+    return lines
+
+
+def fit_primary_lines(
+    draw: ImageDraw.ImageDraw, text: str, max_width: int, max_height: int
+) -> tuple[list[str], ImageFont.ImageFont, int]:
+    """Pick the largest font (key -> key_small -> key_tiny) that lets `text`
+    fit within max_width, wrapping to at most 2 lines if a single line
+    doesn't fit."""
+    font_names = ["key", "key_small", "key_tiny"]
+    for font_name in font_names:
+        font = FONTS[font_name]
+        line_h = text_size(draw, "Agあ", font)[1] + 2
+        width, _ = text_size(draw, text, font)
+        if width <= max_width:
+            return [text], font, line_h
+        lines = wrap_text(draw, text, font, max_width)
+        fits_width = all(text_size(draw, line, font)[0] <= max_width for line in lines)
+        if len(lines) <= 2 and fits_width and line_h * len(lines) <= max_height:
+            return lines, font, line_h
+
+    font = FONTS["key_tiny"]
+    line_h = text_size(draw, "Agあ", font)[1] + 2
+    return wrap_text(draw, text, font, max_width), font, line_h
+
+
+def fit_hint_font(draw: ImageDraw.ImageDraw, text: str, max_width: int) -> ImageFont.ImageFont:
+    """Shrink the hint font (e.g. a raw key code like 'Ctrl+Cmd+Space') until
+    it fits max_width, so it doesn't bleed into neighboring keys."""
+    for font_name in ("hint", "hint_small", "hint_tiny"):
+        font = FONTS[font_name]
+        width, _ = text_size(draw, text, font)
+        if width <= max_width:
+            return font
+    return FONTS["hint_tiny"]
+
+
+def draw_multiline_centered(
+    draw: ImageDraw.ImageDraw, xy: tuple[int, int, int, int], lines: list[str], font: ImageFont.ImageFont, line_h: int, fill: str
+) -> None:
+    total_h = line_h * len(lines)
+    y = xy[1] + (xy[3] - xy[1] - total_h) / 2
+    for line in lines:
+        w, _ = text_size(draw, line, font)
+        x = xy[0] + (xy[2] - xy[0] - w) / 2
+        draw.text((x, y), line, font=font, fill=fill)
+        y += line_h
 
 
 def draw_combo(draw: ImageDraw.ImageDraw, xy: tuple[int, int, int, int], label: str) -> None:
@@ -366,11 +524,17 @@ def draw_key(draw: ImageDraw.ImageDraw, xy: tuple[int, int, int, int], label: La
     if is_shortcut(label.primary):
         draw_combo(draw, xy, label.primary)
     else:
-        font = FONTS["key"] if len(label.primary) <= 6 else FONTS["key_small"]
-        upper = (xy[0], xy[1] + 4, xy[2], xy[3] - (24 if label.hint else 4))
-        centered_text(draw, upper, label.primary, font, COLORS["text"])
+        pad = 3
+        hint_h = 24 if label.hint else 0
+        primary_box = (xy[0] + pad, xy[1] + pad, xy[2] - pad, xy[3] - hint_h - pad)
+        max_w = primary_box[2] - primary_box[0]
+        max_h = primary_box[3] - primary_box[1]
+        lines, font, line_h = fit_primary_lines(draw, label.primary, max_w, max_h)
+        draw_multiline_centered(draw, primary_box, lines, font, line_h, COLORS["text"])
     if label.hint:
-        centered_text(draw, (xy[0], xy[3] - 28, xy[2], xy[3] - 6), label.hint, FONTS["hint"], COLORS["muted"])
+        hint_box = (xy[0] + 3, xy[3] - 27, xy[2] - 3, xy[3] - 5)
+        hint_font = fit_hint_font(draw, label.hint, hint_box[2] - hint_box[0])
+        centered_text(draw, hint_box, label.hint, hint_font, COLORS["muted"])
 
 
 def draw_card_frame(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, note: str) -> None:
