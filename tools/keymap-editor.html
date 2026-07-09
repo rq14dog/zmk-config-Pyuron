@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pyuron Keymap Editor</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #20242d;
+      --muted: #626b7a;
+      --line: #d7dce5;
+      --accent: #0f766e;
+      --accent-strong: #0b5f59;
+      --key: #f9fafb;
+      --key-active: #dff4ef;
+      --danger: #b42318;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14171d;
+        --panel: #1d222b;
+        --text: #eef2f7;
+        --muted: #a3adbc;
+        --line: #343b48;
+        --key: #242b35;
+        --key-active: #123f3b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    .file-button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      margin-bottom: 16px;
+    }
+
+    .toolbar label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    select,
+    input[type="text"] {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 7px 10px;
+    }
+
+    .status {
+      flex: 1 1 220px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+    }
+
+    .board,
+    .side {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(13, minmax(44px, 1fr));
+      grid-auto-rows: 52px;
+      gap: 8px;
+      min-width: 760px;
+    }
+
+    .board-scroll {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .key {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--key);
+      color: var(--text);
+      min-width: 0;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .key.active {
+      border-color: var(--accent);
+      background: var(--key-active);
+    }
+
+    .key-index {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .key-binding {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      line-height: 1.1;
+    }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 104px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px;
+      resize: vertical;
+    }
+
+    .quick {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .error {
+      color: var(--danger);
+    }
+
+    @media (max-width: 880px) {
+      header,
+      .workspace {
+        display: block;
+      }
+
+      header > div:last-child,
+      .side {
+        margin-top: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Pyuron Keymap Editor</h1>
+        <p>Pyuron.keymap を読み込み、キーをクリックして binding を編集します。</p>
+      </div>
+      <div>
+        <button class="primary" id="downloadButton" type="button">keymap を生成</button>
+      </div>
+    </header>
+
+    <section class="toolbar" aria-label="操作">
+      <label class="file-button" for="fileInput">keymap を開く</label>
+      <input id="fileInput" type="file" accept=".keymap,.dtsi,.txt">
+      <label>
+        レイヤー
+        <select id="layerSelect"></select>
+      </label>
+      <button id="loadDefaultButton" type="button">config/Pyuron.keymap を再読込</button>
+      <span class="status" id="status">読み込み中...</span>
+    </section>
+
+    <section class="workspace">
+      <div class="board">
+        <div class="board-scroll">
+          <div class="grid" id="grid" aria-label="キーマップ"></div>
+        </div>
+      </div>
+
+      <aside class="side" aria-label="編集">
+        <div>
+          <p id="selection">キーを選択してください。</p>
+        </div>
+        <label class="field">
+          <span>binding</span>
+          <textarea id="bindingInput" spellcheck="false" placeholder="例: &kp A"></textarea>
+        </label>
+        <button class="primary" id="applyButton" type="button">選択キーに反映</button>
+        <div class="quick" aria-label="よく使う binding">
+          <button type="button" data-binding="&trans">&amp;trans</button>
+          <button type="button" data-binding="&none">&amp;none</button>
+          <button type="button" data-binding="&kp ESC">&amp;kp ESC</button>
+          <button type="button" data-binding="&kp TAB">&amp;kp TAB</button>
+          <button type="button" data-binding="&kp SPACE">&amp;kp SPACE</button>
+          <button type="button" data-binding="&kp ENTER">&amp;kp ENTER</button>
+        </div>
+        <label class="field">
+          <span>出力プレビュー</span>
+          <textarea id="outputPreview" spellcheck="false" readonly></textarea>
+        </label>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const keyPositions = [
+      { row: 0, col: 0, x: 0, y: 0 }, { row: 0, col: 1, x: 1, y: 0 }, { row: 0, col: 2, x: 2, y: 0 }, { row: 0, col: 3, x: 3, y: 0 }, { row: 0, col: 4, x: 4, y: 0 },
+      { row: 0, col: 5, x: 8, y: 0 }, { row: 0, col: 6, x: 9, y: 0 }, { row: 0, col: 7, x: 10, y: 0 }, { row: 0, col: 8, x: 11, y: 0 }, { row: 0, col: 9, x: 12, y: 0 },
+      { row: 1, col: 0, x: 0, y: 1 }, { row: 1, col: 1, x: 1, y: 1 }, { row: 1, col: 2, x: 2, y: 1 }, { row: 1, col: 3, x: 3, y: 1 }, { row: 1, col: 4, x: 4, y: 1 },
+      { row: 1, col: 5, x: 8, y: 1 }, { row: 1, col: 6, x: 9, y: 1 }, { row: 1, col: 7, x: 10, y: 1 }, { row: 1, col: 8, x: 11, y: 1 }, { row: 1, col: 9, x: 12, y: 1 },
+      { row: 2, col: 0, x: 0, y: 2 }, { row: 2, col: 1, x: 1, y: 2 }, { row: 2, col: 2, x: 2, y: 2 }, { row: 2, col: 3, x: 3, y: 2 }, { row: 2, col: 4, x: 4, y: 2 }, { row: 2, col: 5, x: 5, y: 2 },
+      { row: 2, col: 6, x: 7, y: 2 }, { row: 2, col: 7, x: 8, y: 2 }, { row: 2, col: 8, x: 9, y: 2 }, { row: 2, col: 9, x: 10, y: 2 },
+      { row: 3, col: 0, x: 11, y: 2 }, { row: 3, col: 1, x: 12, y: 2 }, { row: 3, col: 2, x: 0, y: 3 }, { row: 3, col: 3, x: 1, y: 3 },
+      { row: 3, col: 4, x: 4, y: 3 }, { row: 3, col: 5, x: 5, y: 3 }, { row: 3, col: 6, x: 7, y: 3 }, { row: 3, col: 7, x: 8, y: 3 }, { row: 3, col: 8, x: 11, y: 3 }, { row: 3, col: 9, x: 12, y: 3 }
+    ];
+
+    const state = {
+      source: "",
+      layers: [],
+      activeLayer: 0,
+      activeKey: null
+    };
+
+    const grid = document.querySelector("#grid");
+    const status = document.querySelector("#status");
+    const layerSelect = document.querySelector("#layerSelect");
+    const bindingInput = document.querySelector("#bindingInput");
+    const selection = document.querySelector("#selection");
+    const outputPreview = document.querySelector("#outputPreview");
+
+    function tokenizeBindings(text) {
+      return Array.from(text.matchAll(/&[^\s]+(?:\s+(?!&)[^\s]+)*/g), (match) => match[0].trim());
+    }
+
+    function parseKeymap(source) {
+      const layerRegex = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*\{\s*\n\s*bindings\s*=\s*<\n([\s\S]*?)^\s*>;\s*\n\s*};/gm;
+      const layers = [];
+      let match;
+
+      while ((match = layerRegex.exec(source)) !== null) {
+        layers.push({
+          name: match[1],
+          bindings: tokenizeBindings(match[2]),
+          fullMatch: match[0],
+          bindingsText: match[2]
+        });
+      }
+
+      if (!layers.length) throw new Error("レイヤーを見つけられませんでした。");
+      return layers;
+    }
+
+    function bindingRows(bindings) {
+      const width = Math.max(...bindings.map((binding) => binding.length), 0);
+      const rows = [];
+      for (let index = 0; index < bindings.length; index += 10) {
+        rows.push(bindings.slice(index, index + 10).map((binding) => binding.padEnd(width + 2, " ")).join("").trimEnd());
+      }
+      return rows.join("\n");
+    }
+
+    function buildKeymap() {
+      let output = state.source;
+      for (const layer of state.layers) {
+        const nextBlock = layer.fullMatch.replace(layer.bindingsText, bindingRows(layer.bindings) + "\n");
+        output = output.replace(layer.fullMatch, nextBlock);
+      }
+      return output;
+    }
+
+    function renderLayerSelect() {
+      layerSelect.innerHTML = "";
+      state.layers.forEach((layer, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = `${index}: ${layer.name}`;
+        layerSelect.append(option);
+      });
+      layerSelect.value = String(state.activeLayer);
+    }
+
+    function renderGrid() {
+      grid.innerHTML = "";
+      const layer = state.layers[state.activeLayer];
+      if (!layer) return;
+
+      keyPositions.forEach((position, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "key";
+        if (state.activeKey === index) button.classList.add("active");
+        button.style.gridColumn = `${position.x + 1} / span 1`;
+        button.style.gridRow = `${position.y + 1} / span 1`;
+        button.title = layer.bindings[index] || "";
+        button.innerHTML = `<span class="key-index">${index} r${position.row}c${position.col}</span><span class="key-binding"></span>`;
+        button.querySelector(".key-binding").textContent = layer.bindings[index] || "(empty)";
+        button.addEventListener("click", () => selectKey(index));
+        grid.append(button);
+      });
+
+      outputPreview.value = buildKeymap();
+    }
+
+    function selectKey(index) {
+      state.activeKey = index;
+      const layer = state.layers[state.activeLayer];
+      const position = keyPositions[index];
+      bindingInput.value = layer.bindings[index] || "";
+      selection.textContent = `${layer.name} / key ${index} / row ${position.row}, col ${position.col}`;
+      renderGrid();
+    }
+
+    function applyBinding() {
+      if (state.activeKey === null) return;
+      state.layers[state.activeLayer].bindings[state.activeKey] = bindingInput.value.trim() || "&none";
+      setStatus("編集中です。生成した keymap を config/Pyuron.keymap に反映してください。");
+      renderGrid();
+    }
+
+    function setStatus(message, isError = false) {
+      status.textContent = message;
+      status.classList.toggle("error", isError);
+    }
+
+    function loadSource(source, label) {
+      state.source = source;
+      state.layers = parseKeymap(source);
+      state.activeLayer = 0;
+      state.activeKey = null;
+      renderLayerSelect();
+      renderGrid();
+      bindingInput.value = "";
+      selection.textContent = "キーを選択してください。";
+      setStatus(`${label}: ${state.layers.length} レイヤーを読み込みました。`);
+    }
+
+    async function loadDefault() {
+      try {
+        const response = await fetch("../config/Pyuron.keymap", { cache: "no-store" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        loadSource(await response.text(), "config/Pyuron.keymap");
+      } catch (error) {
+        setStatus("自動読込できません。`python3 -m http.server 8000` で開くか、keymap を選択してください。", true);
+      }
+    }
+
+    document.querySelector("#fileInput").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        loadSource(await file.text(), file.name);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    });
+
+    document.querySelector("#loadDefaultButton").addEventListener("click", loadDefault);
+    document.querySelector("#applyButton").addEventListener("click", applyBinding);
+    bindingInput.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") applyBinding();
+    });
+
+    layerSelect.addEventListener("change", () => {
+      state.activeLayer = Number(layerSelect.value);
+      state.activeKey = null;
+      bindingInput.value = "";
+      selection.textContent = "キーを選択してください。";
+      renderGrid();
+    });
+
+    document.querySelectorAll("[data-binding]").forEach((button) => {
+      button.addEventListener("click", () => {
+        bindingInput.value = button.dataset.binding;
+        applyBinding();
+      });
+    });
+
+    document.querySelector("#downloadButton").addEventListener("click", () => {
+      const blob = new Blob([buildKeymap()], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Pyuron.keymap";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    loadDefault();
+  </script>
+</body>
+</html>

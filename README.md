@@ -1,5 +1,10 @@
 # ファームウェア更新手順とキーマップの編集
 
+## キーマップ早見表
+
+現在の配置は [Pyuron Keymap Cheatsheet](docs/keymap-cheatsheet.html) で確認できます。
+画像版は [Pyuron Keymap JPG](docs/keymap-cheatsheet.jpg) です。
+
 ## ZMK Studioによるキーマップの編集
 ### 手順1. 有線接続でキーマップを変更する場合は[ZMK Studio](https://zmk.studio/)にアクセス
 ### 手順2. 中央にある"USB"をクリックしてデバイスを選択することでキーマップの編集が可能になります。
