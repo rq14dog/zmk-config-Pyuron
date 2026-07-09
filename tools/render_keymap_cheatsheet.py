@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Render a readable Pyuron keymap cheatsheet image.
+"""Render the Pyuron keymap cheatsheet (JPG + HTML + Markdown).
 
 Source of truth: config/Pyuron.keymap + config/Pyuron.json.
-Output: docs/keymap-cheatsheet.jpg (landscape, 2-column layer grid).
+All three outputs are built from the same parsed layer data so they
+cannot drift from each other or from the keymap.
 """
 
 from __future__ import annotations
@@ -18,7 +19,10 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 KEYMAP = ROOT / "config" / "Pyuron.keymap"
 LAYOUT = ROOT / "config" / "Pyuron.json"
-OUTPUT = ROOT / "docs" / "keymap-cheatsheet.jpg"
+HTML_TEMPLATE = ROOT / "tools" / "templates" / "keymap-cheatsheet.template.html"
+OUTPUT_JPG = ROOT / "docs" / "keymap-cheatsheet.jpg"
+OUTPUT_MD = ROOT / "docs" / "keymap-cheatsheet.md"
+OUTPUT_HTML = ROOT / "docs" / "keymap-cheatsheet.html"
 
 
 @dataclass
@@ -52,6 +56,7 @@ KEY_NAMES = {
     "COMMA": ",",
     "DELETE": "Del",
     "DOT": ".",
+    "DOWN": "Down",
     "DOWN_ARROW": "Down",
     "END": "End",
     "ENTER": "Enter",
@@ -123,6 +128,26 @@ LAYER_NOTES = {
     "MOUSE": "right trackball move (auto, 1s)",
 }
 
+LAYER_GROUP = {
+    "MAC_BASE": "mac",
+    "MAC_OPS": "mac",
+    "WIN_BASE": "win",
+    "WIN_OPS": "win",
+    "NUM_SYS": "utility",
+    "SYSTEM": "utility",
+    "MOUSE": "utility",
+}
+
+LAYER_DESCRIPTIONS = {
+    "MAC_BASE": "Mac用の通常入力",
+    "MAC_OPS": "Mac用操作レイヤー。`MAC_BASE` の `Enter` 長押し",
+    "WIN_BASE": "Windows用の通常入力",
+    "WIN_OPS": "Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し",
+    "NUM_SYS": "数字・記号・カーソル。Baseの `Space` 長押し",
+    "SYSTEM": "Bluetooth・OS切替・Bootloader。Baseの `Esc` 長押し",
+    "MOUSE": "マウスクリック用。右トラックボールを動かすと1秒間自動で有効",
+}
+
 # Cards are placed on this grid; None renders the legend card.
 LAYER_GRID = [
     ["MAC_BASE", "WIN_BASE"],
@@ -130,6 +155,9 @@ LAYER_GRID = [
     ["NUM_SYS", "SYSTEM"],
     ["MOUSE", None],
 ]
+
+# Sequential order used by the Markdown/HTML documents (linear reading, unlike the JPG's 2-column grid).
+DOC_LAYER_ORDER = ["MAC_BASE", "MAC_OPS", "WIN_BASE", "WIN_OPS", "NUM_SYS", "SYSTEM", "MOUSE"]
 
 MARGIN = 50
 COLUMN_GAP = 40
@@ -187,6 +215,29 @@ def parse_layers(text: str) -> list[tuple[str, list[str]]]:
     for match in pattern.finditer(text):
         layers.append((match.group(1), tokenize_bindings(match.group(2))))
     return layers
+
+
+def parse_combos(text: str) -> list[tuple[list[int], str]]:
+    combos: list[tuple[list[int], str]] = []
+    for block in re.finditer(r"combo_\w+\s*\{([^}]*)\}", text, re.DOTALL):
+        body = block.group(1)
+        position_match = re.search(r"key-positions\s*=\s*<([^>]*)>", body)
+        binding_match = re.search(r"bindings\s*=\s*<([^>]*)>", body)
+        if not position_match or not binding_match:
+            continue
+        combo_positions = [int(value) for value in position_match.group(1).split()]
+        combos.append((combo_positions, binding_match.group(1).strip()))
+    return combos
+
+
+def display_primary(label: "Label") -> str:
+    return "trns" if label.kind == "transparent" else label.primary
+
+
+def combo_description(combo_positions: list[int], target_binding: str, base_labels: list["Label"]) -> str:
+    key_names = [display_primary(base_labels[position]) for position in combo_positions]
+    target = label_for(target_binding, "MAC_BASE")
+    return f"{' + '.join(key_names)} -> {display_primary(target)}"
 
 
 def key_name(raw: str, layer_name: str) -> str:
@@ -374,19 +425,7 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
         ty += 40
 
 
-def main() -> int:
-    with LAYOUT.open(encoding="utf-8") as file:
-        positions = json.load(file)["layouts"]["LAYOUT"]["layout"]
-    layers = dict(parse_layers(KEYMAP.read_text(encoding="utf-8")))
-    if not layers:
-        print("No layers found.", file=sys.stderr)
-        return 1
-
-    missing = [name for row in LAYER_GRID for name in row if name and name not in layers]
-    if missing:
-        print(f"Layers missing from keymap: {', '.join(missing)}", file=sys.stderr)
-        return 1
-
+def render_jpg(layers: dict[str, list[str]], positions: list[dict[str, int]]) -> None:
     image = Image.new("RGB", (WIDTH, HEIGHT), COLORS["bg"])
     draw = ImageDraw.Draw(image)
     draw.text((MARGIN, 34), "Pyuron Keymap", font=FONTS["title"], fill=COLORS["text"])
@@ -403,9 +442,132 @@ def main() -> int:
                 labels = [label_for(binding, name) for binding in layers[name]]
                 draw_layer(draw, x, y, name, labels, positions)
 
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    image.save(OUTPUT, quality=92, optimize=True)
-    print(f"Wrote {OUTPUT} ({WIDTH}x{HEIGHT})")
+    OUTPUT_JPG.parent.mkdir(parents=True, exist_ok=True)
+    image.save(OUTPUT_JPG, quality=92, optimize=True)
+    print(f"Wrote {OUTPUT_JPG} ({WIDTH}x{HEIGHT})")
+
+
+def markdown_cell(label: Label) -> str:
+    primary = display_primary(label)
+    if not primary:
+        return ""
+    if label.hint:
+        return f"{primary} / {label.hint}"
+    return primary
+
+
+def render_markdown_layer(name: str, labels: list[Label], positions: list[dict[str, int]], max_x: int, max_y: int) -> str:
+    grid = {(position["x"], position["y"]): label for label, position in zip(labels, positions)}
+    header = "| " + " | ".join(f"x{i}" for i in range(max_x + 1)) + " |"
+    separator = "| " + " | ".join("---" for _ in range(max_x + 1)) + " |"
+    rows = []
+    for y in range(max_y + 1):
+        cells = [markdown_cell(grid[(x, y)]) if (x, y) in grid else "" for x in range(max_x + 1)]
+        rows.append("| " + " | ".join(cells) + " |")
+    return "\n".join([f"## {name}", "", header, separator, *rows])
+
+
+def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str]]) -> str:
+    max_x = max(position["x"] for position in positions)
+    max_y = max(position["y"] for position in positions)
+    base_labels = [label_for(binding, "MAC_BASE") for binding in layers["MAC_BASE"]]
+    combo_lines = "\n".join(
+        f"- コンボ: `{combo_description(combo_positions, target, base_labels)}`" for combo_positions, target in combos
+    )
+
+    overview_rows = "\n".join(
+        f"| {index} | `{name}` | {LAYER_DESCRIPTIONS.get(name, '')} |" for index, name in enumerate(DOC_LAYER_ORDER)
+    )
+
+    layer_sections = "\n\n".join(
+        render_markdown_layer(name, [label_for(binding, name) for binding in layers[name]], positions, max_x, max_y)
+        for name in DOC_LAYER_ORDER
+    )
+
+    return f"""# Pyuron キーマップ早見表
+
+正本は [config/Pyuron.keymap](../config/Pyuron.keymap) と [config/Pyuron.json](../config/Pyuron.json) です。
+このファイルは `tools/render_keymap_cheatsheet.py` が正本から自動生成します。手動編集しないでください。
+
+役割分担:
+
+- 画像版 [keymap-cheatsheet.jpg](keymap-cheatsheet.jpg): 印刷・全レイヤー一覧用。
+- HTML版 [keymap-cheatsheet.html](keymap-cheatsheet.html): 画面で見る用（ダークモード対応、フィルタ・表示密度切替あり）。
+- この Markdown: GitHub 上で内容を確認する用。
+
+いずれも `python3 tools/render_keymap_cheatsheet.py` で正本から再生成できます。
+
+## レイヤー
+
+| 番号 | レイヤー | 使い方 |
+| --- | --- | --- |
+{overview_rows}
+
+## 読み方
+
+- `primary / hold Xxx` は短く押すと primary、長押しすると Xxx です。
+- `trns` は下のレイヤーを透過します。
+- 空欄は物理的なキーがない位置です。
+- `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
+- `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
+{combo_lines}
+
+{layer_sections}
+"""
+
+
+def render_html(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str]]) -> str:
+    base_labels = [label_for(binding, "MAC_BASE") for binding in layers["MAC_BASE"]]
+    combo_pill = ", ".join(combo_description(combo_positions, target, base_labels) for combo_positions, target in combos)
+
+    layers_json = [
+        {
+            "name": name,
+            "group": LAYER_GROUP.get(name, "utility"),
+            "note": LAYER_NOTES.get(name, ""),
+            "keys": [
+                [display_primary(label_for(binding, name)), label_for(binding, name).hint, label_for(binding, name).kind]
+                for binding in layers[name]
+            ],
+        }
+        for name in DOC_LAYER_ORDER
+    ]
+
+    template = HTML_TEMPLATE.read_text(encoding="utf-8")
+    html = template.replace("__POSITIONS_JSON__", json.dumps(positions))
+    html = html.replace("__LAYERS_JSON__", json.dumps(layers_json, ensure_ascii=False))
+    html = html.replace("__KEY_COUNT__", str(len(positions)))
+    html = html.replace("__LAYER_COUNT__", str(len(DOC_LAYER_ORDER)))
+    html = html.replace("__COMBO_PILL__", combo_pill)
+    return html
+
+
+def main() -> int:
+    with LAYOUT.open(encoding="utf-8") as file:
+        positions = json.load(file)["layouts"]["LAYOUT"]["layout"]
+    layers = dict(parse_layers(KEYMAP.read_text(encoding="utf-8")))
+    if not layers:
+        print("No layers found.", file=sys.stderr)
+        return 1
+
+    required = set(DOC_LAYER_ORDER) | {name for row in LAYER_GRID for name in row if name}
+    missing = [name for name in required if name not in layers]
+    if missing:
+        print(f"Layers missing from keymap: {', '.join(missing)}", file=sys.stderr)
+        return 1
+
+    combos = parse_combos(KEYMAP.read_text(encoding="utf-8"))
+
+    render_jpg(layers, positions)
+
+    OUTPUT_MD.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_MD.write_text(render_markdown(layers, positions, combos), encoding="utf-8")
+    print(f"Wrote {OUTPUT_MD}")
+
+    OUTPUT_HTML.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_HTML.write_text(render_html(layers, positions, combos), encoding="utf-8")
+    print(f"Wrote {OUTPUT_HTML}")
+
     return 0
 
 
