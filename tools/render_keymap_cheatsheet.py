@@ -72,6 +72,7 @@ KEY_NAMES = {
     "LEFT": "Left",
     "LEFT_ARROW": "Left",
     "LEFT_BRACKET": "[",
+    "LEFT_ALT": "Alt",
     "LEFT_SHIFT": "Shift",
     "LCTRL": "Ctrl",
     "LGUI": "Cmd",
@@ -576,7 +577,8 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
     lines = [
         ("Tap / hold:", "big label = tap, small label = hold"),
         ("Layer access:", "Space hold -> Num,  Enter hold -> Mac/Win Ops"),
-        ("", "Esc hold -> System,  right trackball move -> Mouse (1s)"),
+        ("", "Esc hold -> System"),
+        ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (1s)"),
         ("Combo:", "P + Esc together -> back to Mac Base"),
         ("OS switch:", "Mac mode = BT 0 + Mac,  Win mode = BT 1 + Win (SYSTEM layer)"),
     ]
@@ -674,6 +676,8 @@ def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]
 - 空欄は物理的なキーがない位置です。
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
+- 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
+- 右トラックボールはカーソル移動用で、動かすと `MOUSE` が1秒間有効になります。
 {combo_lines}
 
 {layer_sections}

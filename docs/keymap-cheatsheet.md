@@ -30,6 +30,8 @@
 - 空欄は物理的なキーがない位置です。
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
+- 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
+- 右トラックボールはカーソル移動用で、動かすと `MOUSE` が1秒間有効になります。
 - コンボ: `P + Esc -> To Mac`
 
 ## MAC_BASE
@@ -56,7 +58,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z / hold Shift | X | C | V | B | Kana |  | Eisu | N | M | , | . | / / hold RShift |
+| Z / hold Shift | X | C | V | B | Kana |  | Eisu / hold Alt | N | M | , | . | / / hold RShift |
 | Tab | Win |  |  | Ctrl | Space / hold Num |  | Bspc | Enter / hold Win Ops |  |  | Ctrl | Esc / hold Sys |
 
 ## WIN_OPS
