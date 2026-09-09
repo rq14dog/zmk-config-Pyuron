@@ -178,7 +178,7 @@ LAYER_NOTES = {
     "WIN_BASE": "default",
     "WIN_OPS": "Enter hold",
     "NUM_SYS": "Space hold",
-    "SYSTEM": "Esc hold",
+    "SYSTEM": "Num: hold Sys",
     "MOUSE": "right trackball move (auto, 1s)",
 }
 
@@ -198,7 +198,7 @@ LAYER_DESCRIPTIONS = {
     "WIN_BASE": "Windows用の通常入力",
     "WIN_OPS": "Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し",
     "NUM_SYS": "数字・記号・カーソル。Baseの `Space` 長押し",
-    "SYSTEM": "Bluetooth・OS切替・Bootloader。Baseの `Esc` 長押し",
+    "SYSTEM": "Bluetooth・OS切替・Bootloader。NUM_SYSのDelete右隣を押している間だけ有効。離すと戻る",
     "MOUSE": "マウスクリック用。右トラックボールを動かすと1秒間自動で有効",
 }
 
@@ -358,6 +358,10 @@ def label_for(binding: str, layer_name: str) -> Label:
             return Label("BT All", kind="system")
         if len(parts) > 1 and parts[1] == "BT_CLR":
             return Label("BT Clr", kind="system")
+    if behavior == "&mo" and len(parts) > 1:
+        return Label(LAYER_NAMES.get(parts[1], f"L{parts[1]}"), hint="hold", kind="layer")
+    if behavior == "&tog" and len(parts) > 1:
+        return Label(LAYER_NAMES.get(parts[1], f"L{parts[1]}"), hint="toggle", kind="layer")
     if behavior == "&to" and len(parts) > 1:
         return Label(f"To {LAYER_NAMES.get(parts[1], f'L{parts[1]}')}", kind="layer")
     if behavior == "&lt" and len(parts) > 2:
@@ -561,7 +565,29 @@ def draw_layer(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, labels: lis
         draw_key(draw, (key_x, key_y, key_x + KEY_W, key_y + KEY_H), label)
 
 
-def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+def draw_combo_overlays(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> None:
+    if name not in {"MAC_BASE", "WIN_BASE"}:
+        return
+    palette = {"&kp ESC": ("#bd4c14", "#fff0df", "Esc"), "&kp LGUI": ("#7147b7", "#f1e8ff", "Win"), "&kp RCTRL": ("#176aa1", "#e0f3ff", "右Ctrl")}
+    for keys, target, scope in combos:
+        if (scope and name not in scope) or target not in palette or len(keys) != 2:
+            continue
+        a, b = sorted((positions[k] for k in keys), key=lambda p: p["x"])
+        if a["y"] != b["y"] or b["x"] - a["x"] != 1:
+            continue
+        stroke, fill, text = palette[target]
+        left = x + BOARD_PAD_X + a["x"] * (KEY_W + KEY_GAP)
+        top = y + HEAD_H + BOARD_PAD_TOP + a["y"] * (KEY_H + KEY_GAP)
+        right = left + 2 * KEY_W + KEY_GAP
+        draw.rounded_rectangle((left - 3, top - 3, right + 3, top + KEY_H + 3), radius=21, outline=stroke, width=4)
+        center = (left + right) / 2
+        width = max(80, text_size(draw, text, FONTS["key"])[0] + 24)
+        badge = (center - width / 2, top + KEY_H - 27, center + width / 2, top + KEY_H + 4)
+        draw.rounded_rectangle(badge, radius=15, fill=fill, outline=stroke, width=3)
+        centered_text(draw, badge, text, FONTS["key"], stroke)
+
+
+def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int, combo_notes: list[str]) -> None:
     draw_card_frame(draw, x, y, "Legend", "how to read")
 
     swatches = [
@@ -582,9 +608,9 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
     lines = [
         ("Tap / hold:", "big label = tap, small label = hold"),
         ("Layer access:", "Space hold -> Num,  Enter hold -> Mac/Win Ops"),
-        ("", "Esc hold -> System"),
+        ("", "Num: hold Sys -> System; release -> close"),
         ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (1s)"),
-        ("Combo:", "P + Esc together -> back to Mac Base"),
+        *(("Combo:" if index == 0 else "", note) for index, note in enumerate(combo_notes)),
         ("OS switch:", "Mac mode = BT 0 + Mac,  Win mode = BT 1 + Win (SYSTEM layer)"),
     ]
     tx = x + 560
@@ -593,10 +619,12 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
         if head:
             draw.text((tx, ty), head, font=FONTS["note"], fill=COLORS["muted"])
         draw.text((tx + 150, ty), body, font=FONTS["note"], fill=COLORS["text"])
-        ty += 40
+        ty += 32
 
 
-def render_jpg(layers: dict[str, list[str]], positions: list[dict[str, int]]) -> None:
+def render_jpg(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> None:
+    base_labels = [label_for(binding, "MAC_BASE") for binding in layers["MAC_BASE"]]
+    combo_notes = [combo_description(keys, target, base_labels, scope).replace("MAC_BASE, WIN_BASE", "Mac/Win base").replace("WIN_BASE", "Win base") for keys, target, scope in combos]
     image = Image.new("RGB", (WIDTH, HEIGHT), COLORS["bg"])
     draw = ImageDraw.Draw(image)
     draw.text((MARGIN, 34), "Pyuron Keymap", font=FONTS["title"], fill=COLORS["text"])
@@ -608,10 +636,11 @@ def render_jpg(layers: dict[str, list[str]], positions: list[dict[str, int]]) ->
         for column_index, name in enumerate(row):
             x = MARGIN + column_index * (CARD_W + COLUMN_GAP)
             if name is None:
-                draw_legend(draw, x, y)
+                draw_legend(draw, x, y, combo_notes)
             else:
                 labels = [label_for(binding, name) for binding in layers[name]]
                 draw_layer(draw, x, y, name, labels, positions)
+                draw_combo_overlays(draw, x, y, name, positions, combos)
 
     OUTPUT_JPG.parent.mkdir(parents=True, exist_ok=True)
     image.save(OUTPUT_JPG, quality=92, optimize=True)
@@ -731,7 +760,7 @@ def main() -> int:
 
     combos = parse_combos(KEYMAP.read_text(encoding="utf-8"))
 
-    render_jpg(layers, positions)
+    render_jpg(layers, positions, combos)
 
     OUTPUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_MD.write_text(render_markdown(layers, positions, combos), encoding="utf-8")

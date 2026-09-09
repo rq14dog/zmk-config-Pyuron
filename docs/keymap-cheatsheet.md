@@ -20,7 +20,7 @@
 | 2 | `WIN_BASE` | Windows用の通常入力 |
 | 3 | `WIN_OPS` | Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し |
 | 4 | `NUM_SYS` | 数字・記号・カーソル。Baseの `Space` 長押し |
-| 5 | `SYSTEM` | Bluetooth・OS切替・Bootloader。Baseの `Esc` 長押し |
+| 5 | `SYSTEM` | Bluetooth・OS切替・Bootloader。NUM_SYSのDelete右隣を押している間だけ有効。離すと戻る |
 | 6 | `MOUSE` | マウスクリック用。右トラックボールを動かすと1秒間自動で有効 |
 
 ## 読み方
@@ -35,7 +35,6 @@
 - コンボ: `Q + W -> Esc (MAC_BASE, WIN_BASE)`
 - コンボ: `H + J -> Win (WIN_BASE)`
 - コンボ: `O + P -> Right Ctrl (WIN_BASE)`
-- コンボ: `P + Esc -> To Mac (all layers)`
 
 ## MAC_BASE
 
@@ -44,13 +43,13 @@
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
 | Z / hold Shift | X | C | V | B | Kana |  | Eisu | N | M | , | . | / / hold RShift |
-| Tab | Ctrl |  |  | Cmd | Space / hold Num |  | Bspc | Enter / hold Mac Ops |  |  | Cmd | Esc / hold Sys |
+| Tab | Ctrl |  |  | Cmd | Space / hold Num |  | Bspc | Enter / hold Mac Ops |  |  | Cmd | Esc |
 
 ## MAC_OPS
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Ctrl+Cmd+Space | 前のアプリ / Cmd+Shift+Tab | Mission Control / Ctrl+Up | アプリ切替 / Cmd+Tab | F11 |  |  |  | trns | 戻る / Cmd+[ | 進む / Cmd+] | フルスクリーン / Ctrl+Cmd+F | 画面ロック / Cmd+Ctrl+Q |
+| 絵文字/記号 / Ctrl+Cmd+Space | trns | Mission Control / Ctrl+Up | trns | F11 |  |  |  | trns | 戻る / Cmd+[ | 進む / Cmd+] | フルスクリーン / Ctrl+Cmd+F | 画面ロック / Cmd+Ctrl+Q |
 | trns | デスクトップ移動 / Ctrl+Left | 閉じたタブを復元 / Shift+Cmd+T | デスクトップ移動 / Ctrl+Right | 全画面スクショ / Cmd+Shift+3 |  |  |  | 強制終了 / Alt+Cmd+Esc | F2 | 最小化 / Cmd+M | trns | trns |
 | trns | 行頭 / Cmd+Left | App Exposé / Ctrl+Down | 行末 / Cmd+Right | 範囲スクショ / Cmd+Shift+4 | trns |  | trns | trns | trns | trns | trns | trns |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Cmd+Q |
@@ -62,13 +61,13 @@
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
 | Z / hold Shift | X | C | V | B | Kana |  | Eisu | N | M | , | . | / / hold RShift |
-| Tab | Win |  |  | Ctrl | Space / hold Num |  | Bspc | Enter / hold Win Ops |  |  | Ctrl | Esc / hold Sys |
+| Tab | Win |  |  | Alt | Space / hold Num |  | Bspc | Enter / hold Win Ops |  |  | Ctrl | Esc |
 
 ## WIN_OPS
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Win+. | 前のアプリ / Shift+Alt+Tab | タスクビュー / Win+Tab | アプリ切替 / Alt+Tab | デスクトップ表示 / Win+D |  |  |  | trns | 戻る / Alt+Left | 進む / Alt+Right | 最大化 / Win+Up | 画面ロック / Win+L |
+| 絵文字/記号 / Win+. | trns | タスクビュー / Win+Tab | trns | デスクトップ表示 / Win+D |  |  |  | trns | 戻る / Alt+Left | 進む / Alt+Right | 最大化 / Win+Up | 画面ロック / Win+L |
 | trns | デスクトップ移動 / Ctrl+Win+Left | 閉じたタブを復元 / Ctrl+Shift+T | デスクトップ移動 / Ctrl+Win+Right | 範囲スクショ / Win+Shift+S |  |  |  | タスクマネージャ / Ctrl+Shift+Esc | 名前変更 / F2 | 最小化 / Win+Down | Ins | End |
 | trns | 先頭 / Ctrl+Home | trns | 末尾 / Ctrl+End | スクショ / PrtSc | trns |  | trns | trns | trns | trns | trns | trns |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Alt+F4 |
@@ -79,8 +78,8 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | / | 1 | 2 | 3 | - |  |  |  | PgUp | Up | PgDn | @ | ~ |
 | * | 4 | 5 | 6 | + |  |  |  | Left | Down | Right | [ | ] |
-| 0 | 7 | 8 | 9 | = | trns |  | trns | F6 | F7 | F8 | F9 | F10 |
-| . | RShift |  |  | To Mac | trns |  | Del | trns |  |  | trns | trns |
+| 0 | 7 | 8 | 9 | = | trns |  | RShift | F6 | F7 | F8 | F9 | F10 |
+| . | trns |  |  | trns | trns |  | Del | Sys / hold |  |  | trns | trns |
 
 ## SYSTEM
 
@@ -89,7 +88,7 @@
 | trns | trns | trns | trns | trns |  |  |  | Mac / mode | Win / mode | BT 2 | BT 3 | BT 4 |
 | trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | trns | trns |
 | trns | trns | trns | trns | trns | trns |  | Boot | trns | trns | trns | BT Clr | BT All |
-| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
+| trns | trns |  |  | trns | trns |  | trns | Sys / hold |  |  | trns | trns |
 
 ## MOUSE
 
