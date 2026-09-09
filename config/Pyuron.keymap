@@ -72,10 +72,10 @@
 
         MAC_OPS {
             bindings = <
-&kp LC(LG(SPACE))     &trans                &kp LC(UP_ARROW)      &trans                &kp F11               &trans                &kp LG(LBKT)          &kp LG(RBKT)          &kp LC(LG(F))         &kp LG(LC(Q))
-&trans                &kp LC(LEFT)          &kp LS(LG(T))         &kp LC(RIGHT)         &kp LG(LS(NUMBER_3))  &kp LA(LG(ESCAPE))    &kp F2                &kp LG(M)             &trans                &trans
-&trans                &kp LG(LEFT_ARROW)    &kp LC(DOWN_ARROW)    &kp LG(RIGHT_ARROW)   &kp LG(LS(NUMBER_4))  &trans                &trans                &trans                &trans                &trans
-&trans                &trans                &trans                &trans                &trans                &trans                &trans                &trans                &trans                &kp LG(Q)
+&kp LC(LG(SPACE))             &kp LG(LEFT_ARROW)            &kp LC(UP_ARROW)              &kp LG(RIGHT_ARROW)           &kp F11                       &trans                        &kp LG(LBKT)                  &kp LG(RBKT)                  &kp LC(LG(F))                 &kp LG(LC(Q))
+&trans                        &kp LC(LEFT)                  &kp LS(LG(T))                 &kp LC(RIGHT)                 &kp LG(LS(NUMBER_3))          &kp LA(LG(ESCAPE))            &kp F2                        &kp LG(M)                     &trans                        &kp SEMICOLON
+&trans                        &trans                        &kp LC(DOWN_ARROW)            &trans                        &kp LG(LS(NUMBER_4))          &trans                        &trans                        &kp LEFT_BRACKET              &kp RIGHT_BRACKET             &kp GRAVE
+&kp BACKSLASH                 &mt RIGHT_SHIFT SINGLE_QUOTE  &trans                        &trans                        &trans                        &trans                        &trans                        &trans                        &trans                        &kp LG(Q)
             >;
         };
 
@@ -90,19 +90,19 @@
 
         WIN_OPS {
             bindings = <
-&kp LG(DOT)              &trans                   &kp LG(TAB)              &trans                   &kp LG(D)                &trans                   &kp LA(LEFT)             &kp LA(RIGHT)            &kp LG(UP)               &kp LG(L)
-&trans                   &kp LC(LG(LEFT_ARROW))   &kp LC(LS(T))            &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))            &kp LC(LS(ESCAPE))       &kp F2                   &kp LG(DOWN)             &kp INSERT               &kp END
-&trans                   &kp LC(HOME)             &trans                   &kp LC(END)              &kp PRINTSCREEN          &trans                   &trans                   &trans                   &trans                   &trans
-&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &kp LA(F4)
+&kp LG(DOT)                   &kp LC(HOME)                  &kp LG(TAB)                   &kp LC(END)                   &kp LG(D)                     &trans                        &kp LA(LEFT)                  &kp LA(RIGHT)                 &kp LG(UP)                    &kp LG(L)
+&trans                        &kp LC(LG(LEFT_ARROW))        &kp LC(LS(T))                 &kp LC(LG(RIGHT_ARROW))       &kp LG(LS(S))                 &kp LC(LS(ESCAPE))            &kp F2                        &kp LG(DOWN)                  &trans                        &kp SEMICOLON
+&trans                        &trans                        &trans                        &trans                        &kp PRINTSCREEN               &trans                        &trans                        &kp LEFT_BRACKET              &kp RIGHT_BRACKET             &kp GRAVE
+&kp BACKSLASH                 &mt RIGHT_SHIFT SINGLE_QUOTE  &trans                        &trans                        &trans                        &trans                        &trans                        &trans                        &trans                        &kp LA(F4)
             >;
         };
 
         NUM_SYS {
             bindings = <
-&kp FSLH           &kp N1             &kp N2             &kp N3             &kp MINUS          &kp PAGE_UP        &kp UP_ARROW       &kp PAGE_DOWN      &kp AT_SIGN        &kp TILDE
-&kp ASTERISK       &kp N4             &kp N5             &kp N6             &kp PLUS           &kp LEFT           &kp DOWN_ARROW     &kp RIGHT          &kp LEFT_BRACKET   &kp RIGHT_BRACKET
-&kp N0             &kp N7             &kp N8             &kp N9             &kp EQUAL          &trans             &kp RIGHT_SHIFT    &kp F6             &kp F7             &kp F8
-&kp F9             &kp F10            &kp DOT            &trans             &trans             &trans             &kp DELETE         &mo 5              &trans             &trans
+&kp FSLH         &kp N1           &kp N2           &kp N3           &kp MINUS        &kp PAGE_UP      &kp UP_ARROW     &kp PAGE_DOWN    &kp INSERT       &kp PAUSE_BREAK
+&kp ASTERISK     &kp N4           &kp N5           &kp N6           &kp PLUS         &kp LEFT         &kp DOWN_ARROW   &kp RIGHT        &kp HOME         &kp END
+&kp N0           &kp N7           &kp N8           &kp N9           &kp EQUAL        &trans           &kp RIGHT_SHIFT  &kp F6           &kp F7           &kp F8
+&kp F9           &kp F10          &kp DOT          &trans           &trans           &trans           &kp DELETE       &mo 5            &trans           &trans
             >;
         };
 

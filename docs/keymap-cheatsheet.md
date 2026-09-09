@@ -49,9 +49,9 @@
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Ctrl+Cmd+Space | trns | Mission Control / Ctrl+Up | trns | F11 |  |  |  | trns | 戻る / Cmd+[ | 進む / Cmd+] | フルスクリーン / Ctrl+Cmd+F | 画面ロック / Cmd+Ctrl+Q |
-| trns | デスクトップ移動 / Ctrl+Left | 閉じたタブを復元 / Shift+Cmd+T | デスクトップ移動 / Ctrl+Right | 全画面スクショ / Cmd+Shift+3 |  |  |  | 強制終了 / Alt+Cmd+Esc | F2 | 最小化 / Cmd+M | trns | trns |
-| trns | 行頭 / Cmd+Left | App Exposé / Ctrl+Down | 行末 / Cmd+Right | 範囲スクショ / Cmd+Shift+4 | trns |  | trns | trns | trns | trns | trns | trns |
+| 絵文字/記号 / Ctrl+Cmd+Space | 行頭 / Cmd+Left | Mission Control / Ctrl+Up | 行末 / Cmd+Right | F11 |  |  |  | trns | 戻る / Cmd+[ | 進む / Cmd+] | フルスクリーン / Ctrl+Cmd+F | 画面ロック / Cmd+Ctrl+Q |
+| trns | デスクトップ移動 / Ctrl+Left | 閉じたタブを復元 / Shift+Cmd+T | デスクトップ移動 / Ctrl+Right | 全画面スクショ / Cmd+Shift+3 |  |  |  | 強制終了 / Alt+Cmd+Esc | F2 | 最小化 / Cmd+M | trns | ; |
+| trns | trns | App Exposé / Ctrl+Down | trns | 範囲スクショ / Cmd+Shift+4 | trns |  | trns | [ | ] | ` | \ | ' / hold RShift |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Cmd+Q |
 
 ## WIN_BASE
@@ -67,17 +67,17 @@
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Win+. | trns | タスクビュー / Win+Tab | trns | デスクトップ表示 / Win+D |  |  |  | trns | 戻る / Alt+Left | 進む / Alt+Right | 最大化 / Win+Up | 画面ロック / Win+L |
-| trns | デスクトップ移動 / Ctrl+Win+Left | 閉じたタブを復元 / Ctrl+Shift+T | デスクトップ移動 / Ctrl+Win+Right | 範囲スクショ / Win+Shift+S |  |  |  | タスクマネージャ / Ctrl+Shift+Esc | 名前変更 / F2 | 最小化 / Win+Down | Ins | End |
-| trns | 先頭 / Ctrl+Home | trns | 末尾 / Ctrl+End | スクショ / PrtSc | trns |  | trns | trns | trns | trns | trns | trns |
+| 絵文字/記号 / Win+. | 先頭 / Ctrl+Home | タスクビュー / Win+Tab | 末尾 / Ctrl+End | デスクトップ表示 / Win+D |  |  |  | trns | 戻る / Alt+Left | 進む / Alt+Right | 最大化 / Win+Up | 画面ロック / Win+L |
+| trns | デスクトップ移動 / Ctrl+Win+Left | 閉じたタブを復元 / Ctrl+Shift+T | デスクトップ移動 / Ctrl+Win+Right | 範囲スクショ / Win+Shift+S |  |  |  | タスクマネージャ / Ctrl+Shift+Esc | 名前変更 / F2 | 最小化 / Win+Down | trns | ; |
+| trns | trns | trns | trns | スクショ / PrtSc | trns |  | trns | [ | ] | ` | \ | ' / hold RShift |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Alt+F4 |
 
 ## NUM_SYS
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| / | 1 | 2 | 3 | - |  |  |  | PgUp | Up | PgDn | @ | ~ |
-| * | 4 | 5 | 6 | + |  |  |  | Left | Down | Right | [ | ] |
+| / | 1 | 2 | 3 | - |  |  |  | PgUp | Up | PgDn | Ins | Pause |
+| * | 4 | 5 | 6 | + |  |  |  | Left | Down | Right | Home | End |
 | 0 | 7 | 8 | 9 | = | trns |  | RShift | F6 | F7 | F8 | F9 | F10 |
 | . | trns |  |  | trns | trns |  | Del | Sys / hold |  |  | trns | trns |
 

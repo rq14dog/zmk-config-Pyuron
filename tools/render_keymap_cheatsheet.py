@@ -49,6 +49,11 @@ COLORS = {
 }
 
 KEY_NAMES = {
+    'GRAVE': '`',
+    'BACKSLASH': '\\',
+    'SINGLE_QUOTE': "'",
+    'SEMICOLON': ';',
+
     "AT_SIGN": "@",
     "ASTERISK": "*",
     "BACKSPACE": "Bspc",
@@ -66,6 +71,7 @@ KEY_NAMES = {
     "FSLH": "/",
     "HOME": "Home",
     "INSERT": "Ins",
+    "PAUSE_BREAK": "Pause",
     "LANG1": "Kana",
     "LANG2": "Eisu",
     "LBKT": "[",
