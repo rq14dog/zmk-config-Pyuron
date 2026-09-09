@@ -32,7 +32,10 @@
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
 - 右トラックボールはカーソル移動用で、動かすと `MOUSE` が1秒間有効になります。
-- コンボ: `P + Esc -> To Mac`
+- コンボ: `Q + W -> Esc (MAC_BASE, WIN_BASE)`
+- コンボ: `H + J -> Win (WIN_BASE)`
+- コンボ: `O + P -> Right Ctrl (WIN_BASE)`
+- コンボ: `P + Esc -> To Mac (all layers)`
 
 ## MAC_BASE
 
@@ -58,7 +61,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z / hold Shift | X | C | V | B | Kana |  | Eisu / hold Alt | N | M | , | . | / / hold RShift |
+| Z / hold Shift | X | C | V | B | Kana |  | Eisu | N | M | , | . | / / hold RShift |
 | Tab | Win |  |  | Ctrl | Space / hold Num |  | Bspc | Enter / hold Win Ops |  |  | Ctrl | Esc / hold Sys |
 
 ## WIN_OPS
@@ -74,10 +77,10 @@
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PgUp | Up | PgDn | @ | ~ |  |  |  | / | 1 | 2 | 3 | - |
-| Left | Down | Right | [ | ] |  |  |  | * | 4 | 5 | 6 | + |
-| F6 | F7 | F8 | F9 | F10 | trns |  | trns | 0 | 7 | 8 | 9 | = |
-| trns | trns |  |  | To Mac | trns |  | Del | trns |  |  | . | RShift |
+| / | 1 | 2 | 3 | - |  |  |  | PgUp | Up | PgDn | @ | ~ |
+| * | 4 | 5 | 6 | + |  |  |  | Left | Down | Right | [ | ] |
+| 0 | 7 | 8 | 9 | = | trns |  | trns | F6 | F7 | F8 | F9 | F10 |
+| . | RShift |  |  | To Mac | trns |  | Del | trns |  |  | trns | trns |
 
 ## SYSTEM
 

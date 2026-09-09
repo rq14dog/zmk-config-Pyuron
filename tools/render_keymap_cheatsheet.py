@@ -76,6 +76,7 @@ KEY_NAMES = {
     "LEFT_SHIFT": "Shift",
     "LCTRL": "Ctrl",
     "LGUI": "Cmd",
+    "RCTRL": "Right Ctrl",
     "MINUS": "-",
     "N0": "0",
     "N1": "1",
@@ -276,8 +277,9 @@ def parse_layers(text: str) -> list[tuple[str, list[str]]]:
     return layers
 
 
-def parse_combos(text: str) -> list[tuple[list[int], str]]:
-    combos: list[tuple[list[int], str]] = []
+def parse_combos(text: str) -> list[tuple[list[int], str, list[str]]]:
+    combos: list[tuple[list[int], str, list[str]]] = []
+    layer_names = [name for name, _ in parse_layers(text)]
     for block in re.finditer(r"combo_\w+\s*\{([^}]*)\}", text, re.DOTALL):
         body = block.group(1)
         position_match = re.search(r"key-positions\s*=\s*<([^>]*)>", body)
@@ -285,7 +287,9 @@ def parse_combos(text: str) -> list[tuple[list[int], str]]:
         if not position_match or not binding_match:
             continue
         combo_positions = [int(value) for value in position_match.group(1).split()]
-        combos.append((combo_positions, binding_match.group(1).strip()))
+        scope_match = re.search(r"layers\s*=\s*<([^>]*)>", body)
+        scope = [layer_names[int(value)] for value in scope_match.group(1).split()] if scope_match else []
+        combos.append((combo_positions, binding_match.group(1).strip(), scope))
     return combos
 
 
@@ -293,10 +297,11 @@ def display_primary(label: "Label") -> str:
     return "trns" if label.kind == "transparent" else label.primary
 
 
-def combo_description(combo_positions: list[int], target_binding: str, base_labels: list["Label"]) -> str:
+def combo_description(combo_positions: list[int], target_binding: str, base_labels: list["Label"], scope: list[str]) -> str:
     key_names = [display_primary(base_labels[position]) for position in combo_positions]
-    target = label_for(target_binding, "MAC_BASE")
-    return f"{' + '.join(key_names)} -> {display_primary(target)}"
+    target = label_for(target_binding, scope[0] if scope else "MAC_BASE")
+    suffix = f" ({', '.join(scope)})" if scope else " (all layers)"
+    return f"{' + '.join(key_names)} -> {display_primary(target)}{suffix}"
 
 
 def key_name(raw: str, layer_name: str) -> str:
@@ -633,12 +638,12 @@ def render_markdown_layer(name: str, labels: list[Label], positions: list[dict[s
     return "\n".join([f"## {name}", "", header, separator, *rows])
 
 
-def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str]]) -> str:
+def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> str:
     max_x = max(position["x"] for position in positions)
     max_y = max(position["y"] for position in positions)
     base_labels = [label_for(binding, "MAC_BASE") for binding in layers["MAC_BASE"]]
     combo_lines = "\n".join(
-        f"- コンボ: `{combo_description(combo_positions, target, base_labels)}`" for combo_positions, target in combos
+        f"- コンボ: `{combo_description(combo_positions, target, base_labels, scope)}`" for combo_positions, target, scope in combos
     )
 
     overview_rows = "\n".join(
@@ -684,9 +689,9 @@ def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]
 """
 
 
-def render_html(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str]]) -> str:
+def render_html(layers: dict[str, list[str]], positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> str:
     base_labels = [label_for(binding, "MAC_BASE") for binding in layers["MAC_BASE"]]
-    combo_pill = ", ".join(combo_description(combo_positions, target, base_labels) for combo_positions, target in combos)
+    combo_pill = ", ".join(combo_description(combo_positions, target, base_labels, scope) for combo_positions, target, scope in combos)
 
     layers_json = [
         {
