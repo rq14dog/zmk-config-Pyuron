@@ -2,8 +2,27 @@
 
 ## キーマップ早見表
 
-現在の配置は [Pyuron Keymap Cheatsheet](docs/keymap-cheatsheet.html) で確認できます。
-画像版は [Pyuron Keymap JPG](docs/keymap-cheatsheet.jpg) です。
+現在生成済みの早見表を以下に表示します。拡大する場合は画像をクリックしてください。
+
+Mac／Windowsとも端末側をUS配列に設定して使う構成です。NUM_SYSは共通で、Windows専用のJIS変換レイヤーはありません。
+
+- Windows OPSの行頭・行末はHome／Endです。文書全体の先頭・末尾へはCtrlを併用します。
+- SYSTEMの「BT All」は1.5秒長押しで全Bluetooth接続設定を消去します。短押しでは何も起きません。隣の「BT Clr」は従来どおり単押しです。
+- Windows右下は右Ctrl。その左は左Ctrlです。
+- 英数はD＋F、かなはJ＋Kのコンボで入力します（両OSのベースのみ、50ms判定）。
+- 元かなキーを押している間はFUNCTION、元英数キーを押している間はSYMBOLSを開き、離すと戻ります。専用のかな・英数キーはありません。
+- SYMBOLSはNUM_SYSの数字と同じ位置にUS配列のShift記号を配置（8の位置には * を配置）。NUM_SYSの0は左手下段右端です。記号はSYMBOLSにまとめ、数値入力で使う四則演算・＝・小数点はNUM_SYSに配置し、* は数字のShift記号としてSYMBOLSにも配置しています。FUNCTIONは右手側の左4列に、上段F1〜F4・中段F5〜F8・下段F9〜F12を配置しています。
+- SYMBOLSにはNUM_SYSの / - + = . を除くUS記号27種類を配置。左端は上から `?`・シングルクォート・ダブルクォートで、`?` は `!` の左隣です。右側は上段から左詰めにし、記号の間の空きをなくしています。OPSの記号は透過に変更しました。NUM_SYSには左上から「/・−」、中段「*・＋」、下段左端「＝」、左下「.」を配置し、5.6などをレイヤーを切り替えず入力できます。ベースの句読点は維持しています。
+- 単独のF1〜F12はFUNCTIONだけに配置。OPSのF2・F11、NUM_SYSのF6〜F10は透過に変更しました。Alt＋F4などの固定ショートカットは維持しています。
+- EscはQ＋Wのコンボで入力します。Macでは右下のEscも使えます。
+- WindowsのH＋J（Win）とO＋P（右Ctrl）のコンボは削除しました。
+- Space長押しでNUM_SYS、Enter長押しで各OSのOPSを開きます。
+- NUM_SYSでは「かな」の位置が左Shift、「英数」の位置が右Shiftです。左Shiftは矢印での範囲選択、右Shiftは数字との記号入力に使えます。通常レイヤーでは元かなキーがFキーレイヤー、元英数キーが記号レイヤーの保持キーです。
+- NUM_SYSのDelete右隣を押している間、SYSTEMを開きます。
+
+[![Pyuron キーマップ早見表](docs/keymap-cheatsheet.jpg)](docs/keymap-cheatsheet.jpg)
+
+[HTML版](docs/keymap-cheatsheet.html) / [テキスト版](docs/keymap-cheatsheet.md)
 
 ## ZMK Studioによるキーマップの編集
 ### 手順1. 有線接続でキーマップを変更する場合は[ZMK Studio](https://zmk.studio/)にアクセス

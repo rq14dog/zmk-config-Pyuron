@@ -157,8 +157,8 @@ SHORTCUT_LABELS: dict[str, dict[str, str]] = {
         "Alt+F4": "終了",
         "Ctrl+Win+Left": "デスクトップ移動",
         "Ctrl+Win+Right": "デスクトップ移動",
-        "Ctrl+Home": "先頭",
-        "Ctrl+End": "末尾",
+        "Home": "行頭",
+        "End": "行末",
         "PrtSc": "スクショ",
         "Win+.": "絵文字/記号",
         "Shift+Alt+Tab": "前のアプリ",
@@ -175,7 +175,9 @@ LAYER_NAMES = {
     "3": "Win Ops",
     "4": "Num",
     "5": "Sys",
-    "6": "Mouse",
+    "6": "Symbols",
+    "7": "Fn",
+    "8": "Mouse",
 }
 
 LAYER_NOTES = {
@@ -185,6 +187,8 @@ LAYER_NOTES = {
     "WIN_OPS": "Enter hold",
     "NUM_SYS": "Space hold",
     "SYSTEM": "Num: hold Sys",
+    "SYMBOLS": "right inner key hold",
+    "FUNCTION": "left inner key hold",
     "MOUSE": "right trackball move (auto, 1s)",
 }
 
@@ -195,6 +199,8 @@ LAYER_GROUP = {
     "WIN_OPS": "win",
     "NUM_SYS": "utility",
     "SYSTEM": "utility",
+    "SYMBOLS": "utility",
+    "FUNCTION": "utility",
     "MOUSE": "utility",
 }
 
@@ -205,6 +211,8 @@ LAYER_DESCRIPTIONS = {
     "WIN_OPS": "Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し",
     "NUM_SYS": "数字・記号・カーソル。Baseの `Space` 長押し",
     "SYSTEM": "Bluetooth・OS切替・Bootloader。NUM_SYSのDelete右隣を押している間だけ有効。離すと戻る",
+    "SYMBOLS": "元英数キーを保持。US記号27種類。数字のShift記号を維持し、右側は左詰め",
+    "FUNCTION": "元かなキーを保持。右手側4列×3行にF1〜F12",
     "MOUSE": "マウスクリック用。右トラックボールを動かすと1秒間自動で有効",
 }
 
@@ -213,11 +221,12 @@ LAYER_GRID = [
     ["MAC_BASE", "WIN_BASE"],
     ["MAC_OPS", "WIN_OPS"],
     ["NUM_SYS", "SYSTEM"],
+    ["SYMBOLS", "FUNCTION"],
     ["MOUSE", None],
 ]
 
 # Sequential order used by the Markdown/HTML documents (linear reading, unlike the JPG's 2-column grid).
-DOC_LAYER_ORDER = ["MAC_BASE", "MAC_OPS", "WIN_BASE", "WIN_OPS", "NUM_SYS", "SYSTEM", "MOUSE"]
+DOC_LAYER_ORDER = ["MAC_BASE", "MAC_OPS", "WIN_BASE", "WIN_OPS", "NUM_SYS", "SYSTEM", "SYMBOLS", "FUNCTION", "MOUSE"]
 
 MARGIN = 50
 COLUMN_GAP = 40
@@ -347,6 +356,8 @@ def label_for(binding: str, layer_name: str) -> Label:
         return Label("")
     behavior = parts[0]
 
+    if behavior == "&bt_clear_hold":
+        return Label("BT All", hint="hold 1.5s", kind="system")
     if behavior == "&trans":
         return Label("", kind="transparent")
     if behavior == "&bootloader":
@@ -375,6 +386,17 @@ def label_for(binding: str, layer_name: str) -> Label:
     if behavior == "&mt" and len(parts) > 2:
         return Label(key_name(parts[2], layer_name), hint=f"hold {key_name(parts[1], layer_name)}", kind="layer")
     if behavior == "&kp" and len(parts) > 1:
+        shifted_number = re.fullmatch(r"LS\(N([0-9])\)", parts[1])
+        if shifted_number:
+            return Label(")!@#$%^&*("[int(shifted_number[1])])
+        shifted_symbols = {
+            "LS(MINUS)": "_", "LS(EQUAL)": "+", "LS(LEFT_BRACKET)": "{",
+            "LS(RIGHT_BRACKET)": "}", "LS(SEMICOLON)": ":", "LS(SINGLE_QUOTE)": '"',
+            "LS(BACKSLASH)": "|", "LS(COMMA)": "<", "LS(DOT)": ">",
+            "LS(GRAVE)": "~", "LS(SLASH)": "?",
+        }
+        if parts[1] in shifted_symbols:
+            return Label(shifted_symbols[parts[1]])
         primary = label_kp(parts[1], layer_name)
         function_name = SHORTCUT_LABELS.get(layer_name, {}).get(primary)
         if function_name:
@@ -574,7 +596,7 @@ def draw_layer(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, labels: lis
 def draw_combo_overlays(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> None:
     if name not in {"MAC_BASE", "WIN_BASE"}:
         return
-    palette = {"&kp ESC": ("#bd4c14", "#fff0df", "Esc"), "&kp LGUI": ("#7147b7", "#f1e8ff", "Win"), "&kp RCTRL": ("#176aa1", "#e0f3ff", "右Ctrl")}
+    palette = {"&kp LANG2": ("#176aa1", "#e0f3ff", "英数"), "&kp LANG1": ("#7147b7", "#f1e8ff", "かな"), "&kp ESC": ("#bd4c14", "#fff0df", "Esc"), "&kp LGUI": ("#7147b7", "#f1e8ff", "Win"), "&kp RCTRL": ("#176aa1", "#e0f3ff", "右Ctrl")}
     for keys, target, scope in combos:
         if (scope and name not in scope) or target not in palette or len(keys) != 2:
             continue
@@ -658,8 +680,8 @@ def markdown_cell(label: Label) -> str:
     if not primary:
         return ""
     if label.hint:
-        return f"{primary} / {label.hint}"
-    return primary
+        primary = f"{primary} / {label.hint}"
+    return primary.replace("&", "&amp;").replace("|", "&#124;").replace("\\", "&#92;").replace("`", "&#96;")
 
 
 def render_markdown_layer(name: str, labels: list[Label], positions: list[dict[str, int]], max_x: int, max_y: int) -> str:

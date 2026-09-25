@@ -42,6 +42,7 @@ split_inputs {
             <&zip_xy_scaler 1 16>,
             <&zip_scroll_scaler 1 5>,
             <&zip_xy_to_scroll_mapper>,
+            <&zip_scroll_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
             <&horizontal_scroll_blocker 0 1>;
     };
 
@@ -51,7 +52,7 @@ split_inputs {
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
             <&zip_xy_scaler 3 4>,
-            <&zip_temp_layer 6 1000>;
+            <&zip_temp_layer 8 1000>;
     };
 
     default_transform: keymap_transform_0 {
