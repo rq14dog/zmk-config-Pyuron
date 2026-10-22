@@ -116,117 +116,62 @@ MOUSE_BUTTONS = {
     "MB2": "RClick",
 }
 
-# Function-name labels for OPS-layer shortcuts, keyed by [layer_name][key-code
-# string] (the key-code string is what label_kp() would otherwise display,
-# e.g. "Cmd+Shift+4"). Layer-scoped because the same key code can mean
-# different things on different layers (e.g. F2 is unmapped on MAC_OPS but
-# "名前変更" on WIN_OPS). Only shortcuts explicitly reviewed and confirmed
-# get an entry; anything missing falls back to showing the raw key code.
+# Reviewed shortcut labels are scoped by OS and layer.
 SHORTCUT_LABELS: dict[str, dict[str, str]] = {
-    "MAC_OPS": {
-        "Ctrl+Cmd+Space": "絵文字/記号",
-        "Cmd+Shift+Tab": "前のアプリ",
-        "Cmd+Tab": "アプリ切替",
-        "Ctrl+Up": "Mission Control",
-        "Cmd+[": "戻る",
-        "Cmd+]": "進む",
-        "Ctrl+Cmd+F": "フルスクリーン",
-        "Cmd+Ctrl+Q": "画面ロック",
-        "Cmd+Shift+3": "全画面スクショ",
-        "Cmd+Shift+4": "範囲スクショ",
-        "Alt+Cmd+Esc": "強制終了",
-        "Cmd+M": "最小化",
-        "Cmd+Q": "終了",
-        "Ctrl+Left": "デスクトップ移動",
-        "Ctrl+Right": "デスクトップ移動",
-        "Shift+Cmd+T": "閉じたタブを復元",
-        "Cmd+Left": "行頭",
-        "Ctrl+Down": "App Exposé",
-        "Cmd+Right": "行末",
+    "MAC_FUNCTION": {
+        "Ctrl+Cmd+F": "全画面", "Cmd+Left": "行頭", "Ctrl+Up": "ウィンドウ一覧",
+        "Cmd+Right": "行末", "Cmd+M": "最小化", "Cmd+Ctrl+Q": "画面ロック",
+        "Ctrl+Left": "前のデスクトップ", "Shift+Cmd+T": "タブ復元",
+        "Ctrl+Right": "次のデスクトップ", "Cmd+Shift+4": "範囲スクショ",
+        "Cmd+Q": "アプリ終了", "Ctrl+Down": "アプリ内一覧",
     },
-    "WIN_OPS": {
-        "Alt+Tab": "アプリ切替",
-        "Win+Tab": "タスクビュー",
-        "Alt+Left": "戻る",
-        "Alt+Right": "進む",
-        "Win+Up": "最大化",
-        "Win+L": "画面ロック",
-        "Win+Shift+S": "範囲スクショ",
-        "Ctrl+Shift+Esc": "タスクマネージャ",
-        "Win+Down": "最小化",
-        "Alt+F4": "終了",
-        "Ctrl+Win+Left": "デスクトップ移動",
-        "Ctrl+Win+Right": "デスクトップ移動",
-        "Home": "行頭",
-        "End": "行末",
-        "PrtSc": "スクショ",
-        "Win+.": "絵文字/記号",
-        "Shift+Alt+Tab": "前のアプリ",
-        "Win+D": "デスクトップ表示",
-        "Ctrl+Shift+T": "閉じたタブを復元",
-        "F2": "名前変更",
+    "WIN_FUNCTION": {
+        "Win+Up": "最大化", "Home": "行頭", "Win+Tab": "ウィンドウ一覧",
+        "End": "行末", "Win+Down": "復元／最小化", "Win+L": "画面ロック",
+        "Ctrl+Win+Left": "前のデスクトップ", "Ctrl+Shift+T": "タブ復元",
+        "Ctrl+Win+Right": "次のデスクトップ", "Win+Shift+S": "範囲スクショ",
+        "Alt+F4": "閉じる", "Win+D": "デスクトップ表示",
     },
+    "MAC_MOUSE": {"Cmd+[": "戻る", "Cmd+]": "進む"},
+    "WIN_MOUSE": {"Alt+Left": "戻る", "Alt+Right": "進む"},
 }
 
 LAYER_NAMES = {
-    "0": "Mac",
-    "1": "Mac Ops",
-    "2": "Win",
-    "3": "Win Ops",
-    "4": "Num",
-    "5": "Sys",
-    "6": "Symbols",
-    "7": "Fn",
-    "8": "Mouse",
+    "0": "Mac", "1": "Win", "2": "Num", "3": "Nav",
+    "4": "Mac Fn", "5": "Win Fn", "6": "Sys", "7": "Mouse", "8": "Win Mouse",
 }
 
 LAYER_NOTES = {
-    "MAC_BASE": "default",
-    "MAC_OPS": "Enter hold",
-    "WIN_BASE": "default",
-    "WIN_OPS": "Enter hold",
-    "NUM_SYS": "Space hold",
-    "SYSTEM": "Num: hold Sys",
-    "SYMBOLS": "right inner key hold",
-    "FUNCTION": "left inner key hold",
-    "MOUSE": "right trackball move (auto, 1s)",
+    "MAC_BASE": "default", "WIN_BASE": "default",
+    "NUM_SYS": "Backspace hold", "NAVIGATION": "Space hold",
+    "MAC_FUNCTION": "Enter hold", "WIN_FUNCTION": "Enter hold",
+    "SYSTEM": "Nav: hold Sys",
+    "MAC_MOUSE": "trackball auto (1s) / inner key hold",
+    "WIN_MOUSE": "trackball auto (1s) / inner key hold",
 }
 
 LAYER_GROUP = {
-    "MAC_BASE": "mac",
-    "MAC_OPS": "mac",
-    "WIN_BASE": "win",
-    "WIN_OPS": "win",
-    "NUM_SYS": "utility",
-    "SYSTEM": "utility",
-    "SYMBOLS": "utility",
-    "FUNCTION": "utility",
-    "MOUSE": "utility",
+    "MAC_BASE": "mac", "WIN_BASE": "win", "NUM_SYS": "utility",
+    "NAVIGATION": "utility", "MAC_FUNCTION": "mac", "WIN_FUNCTION": "win",
+    "SYSTEM": "utility", "MAC_MOUSE": "mac", "WIN_MOUSE": "win",
 }
 
 LAYER_DESCRIPTIONS = {
-    "MAC_BASE": "Mac用の通常入力",
-    "MAC_OPS": "Mac用操作レイヤー。`MAC_BASE` の `Enter` 長押し",
-    "WIN_BASE": "Windows用の通常入力",
-    "WIN_OPS": "Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し",
-    "NUM_SYS": "数字・記号・カーソル。Baseの `Space` 長押し",
-    "SYSTEM": "Bluetooth・OS切替・Bootloader。NUM_SYSのDelete右隣を押している間だけ有効。離すと戻る",
-    "SYMBOLS": "元英数キーを保持。US記号27種類。数字のShift記号を維持し、右側は左詰め",
-    "FUNCTION": "元かなキーを保持。右手側4列×3行にF1〜F12",
-    "MOUSE": "マウスクリック用。右トラックボールを動かすと1秒間自動で有効",
+    "MAC_BASE": "Mac用の通常入力", "WIN_BASE": "Windows用の通常入力",
+    "NUM_SYS": "Backspace長押し。左に数字・四則演算、右に対応するShift記号",
+    "NAVIGATION": "Space長押し。左に記号、右に矢印・ページ移動・Delete。Enter位置を保持してSYSTEMへ",
+    "MAC_FUNCTION": "MacのEnter長押し。左にショートカット、右にF1〜F12。アプリ内一覧はApp Exposé",
+    "WIN_FUNCTION": "WindowsのEnter長押し。左にショートカット、右にF1〜F12",
+    "SYSTEM": "NAVのEnter位置を保持。Bluetooth・OS切替・Bootloader",
+    "MAC_MOUSE": "右トラックボールで自動有効（1秒）。右内側キーでも開けます。O/Pで戻る/進む、L/−で左/右クリック",
+    "WIN_MOUSE": "Windowsとマウス層が有効なとき自動適用。配置はMacと共通",
 }
 
-# Cards are placed on this grid; None renders the legend card.
 LAYER_GRID = [
-    ["MAC_BASE", "WIN_BASE"],
-    ["MAC_OPS", "WIN_OPS"],
-    ["NUM_SYS", "SYSTEM"],
-    ["SYMBOLS", "FUNCTION"],
-    ["MOUSE", None],
+    ["MAC_BASE", "WIN_BASE"], ["NUM_SYS", "NAVIGATION"],
+    ["MAC_FUNCTION", "WIN_FUNCTION"], ["MAC_MOUSE", "WIN_MOUSE"], ["SYSTEM", None],
 ]
-
-# Sequential order used by the Markdown/HTML documents (linear reading, unlike the JPG's 2-column grid).
-DOC_LAYER_ORDER = ["MAC_BASE", "MAC_OPS", "WIN_BASE", "WIN_OPS", "NUM_SYS", "SYSTEM", "SYMBOLS", "FUNCTION", "MOUSE"]
+DOC_LAYER_ORDER = ["MAC_BASE", "WIN_BASE", "NUM_SYS", "NAVIGATION", "MAC_FUNCTION", "WIN_FUNCTION", "SYSTEM", "MAC_MOUSE", "WIN_MOUSE"]
 
 MARGIN = 50
 COLUMN_GAP = 40
@@ -320,6 +265,8 @@ def combo_description(combo_positions: list[int], target_binding: str, base_labe
 
 
 def key_name(raw: str, layer_name: str) -> str:
+    if raw == "LEFT_ALT" and layer_name.startswith("MAC"):
+        return "Option"
     if raw == "LC":
         return "Ctrl"
     if raw in {"LG", "LGUI"}:
@@ -358,6 +305,8 @@ def label_for(binding: str, layer_name: str) -> Label:
 
     if behavior == "&bt_clear_hold":
         return Label("BT All", hint="hold 1.5s", kind="system")
+    if behavior == "&none":
+        return Label("", kind="transparent")
     if behavior == "&trans":
         return Label("", kind="transparent")
     if behavior == "&bootloader":
@@ -391,7 +340,7 @@ def label_for(binding: str, layer_name: str) -> Label:
             return Label(")!@#$%^&*("[int(shifted_number[1])])
         shifted_symbols = {
             "LS(MINUS)": "_", "LS(EQUAL)": "+", "LS(LEFT_BRACKET)": "{",
-            "LS(RIGHT_BRACKET)": "}", "LS(SEMICOLON)": ":", "LS(SINGLE_QUOTE)": '"',
+            "LS(RIGHT_BRACKET)": "}", "LS(LBKT)": "{", "LS(RBKT)": "}", "LS(SEMICOLON)": ":", "LS(SINGLE_QUOTE)": '"',
             "LS(BACKSLASH)": "|", "LS(COMMA)": "<", "LS(DOT)": ">",
             "LS(GRAVE)": "~", "LS(SLASH)": "?",
         }
@@ -405,7 +354,7 @@ def label_for(binding: str, layer_name: str) -> Label:
             return Label(primary, kind="mod")
         if re.fullmatch(r"[A-Z]", primary):
             return Label(primary, kind="letter")
-        if primary in {"Ctrl", "Cmd", "Win", "Shift", "Alt", "RShift"}:
+        if primary in {"Ctrl", "Cmd", "Win", "Shift", "Alt", "RShift", "Option"}:
             return Label(primary, kind="mod")
         return Label(primary)
 
@@ -635,9 +584,9 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int, combo_notes: list[str
 
     lines = [
         ("Tap / hold:", "big label = tap, small label = hold"),
-        ("Layer access:", "Space hold -> Num,  Enter hold -> Mac/Win Ops"),
-        ("", "Num: hold Sys -> System; release -> close"),
-        ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (1s)"),
+        ("Layer access:", "Space hold -> Nav,  Backspace hold -> Num"),
+        ("", "Nav: hold Sys -> System; Enter hold -> Fn"),
+        ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (1s); inner key = Mouse"),
         *(("Combo:" if index == 0 else "", note) for index, note in enumerate(combo_notes)),
         ("OS switch:", "Mac mode = BT 0 + Mac,  Win mode = BT 1 + Win (SYSTEM layer)"),
     ]
@@ -739,7 +688,7 @@ def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
-- 右トラックボールはカーソル移動用で、動かすと `MOUSE` が1秒間有効になります。
+- 右トラックボールは常時カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
 {combo_lines}
 
 {layer_sections}

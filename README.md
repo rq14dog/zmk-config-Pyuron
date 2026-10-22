@@ -6,19 +6,18 @@
 
 Mac／Windowsとも端末側をUS配列に設定して使う構成です。NUM_SYSは共通で、Windows専用のJIS変換レイヤーはありません。
 
-- Windows OPSの行頭・行末はHome／Endです。文書全体の先頭・末尾へはCtrlを併用します。
-- SYSTEMの「BT All」は1.5秒長押しで全Bluetooth接続設定を消去します。短押しでは何も起きません。隣の「BT Clr」は従来どおり単押しです。
-- Windows右下は右Ctrl。その左は左Ctrlです。
-- 英数はD＋F、かなはJ＋Kのコンボで入力します（両OSのベースのみ、50ms判定）。
-- 元かなキーを押している間はFUNCTION、元英数キーを押している間はSYMBOLSを開き、離すと戻ります。専用のかな・英数キーはありません。
-- SYMBOLSはNUM_SYSの数字と同じ位置にUS配列のShift記号を配置（8の位置には * を配置）。NUM_SYSの0は左手下段右端です。記号はSYMBOLSにまとめ、数値入力で使う四則演算・＝・小数点はNUM_SYSに配置し、* は数字のShift記号としてSYMBOLSにも配置しています。FUNCTIONは右手側の左4列に、上段F1〜F4・中段F5〜F8・下段F9〜F12を配置しています。
-- SYMBOLSにはNUM_SYSの / - + = . を除くUS記号27種類を配置。左端は上から `?`・シングルクォート・ダブルクォートで、`?` は `!` の左隣です。右側は上段から左詰めにし、記号の間の空きをなくしています。OPSの記号は透過に変更しました。NUM_SYSには左上から「/・−」、中段「*・＋」、下段左端「＝」、左下「.」を配置し、5.6などをレイヤーを切り替えず入力できます。ベースの句読点は維持しています。
-- 単独のF1〜F12はFUNCTIONだけに配置。OPSのF2・F11、NUM_SYSのF6〜F10は透過に変更しました。Alt＋F4などの固定ショートカットは維持しています。
-- EscはQ＋Wのコンボで入力します。Macでは右下のEscも使えます。
-- WindowsのH＋J（Win）とO＋P（右Ctrl）のコンボは削除しました。
-- Space長押しでNUM_SYS、Enter長押しで各OSのOPSを開きます。
-- NUM_SYSでは「かな」の位置が左Shift、「英数」の位置が右Shiftです。左Shiftは矢印での範囲選択、右Shiftは数字との記号入力に使えます。通常レイヤーでは元かなキーがFキーレイヤー、元英数キーが記号レイヤーの保持キーです。
-- NUM_SYSのDelete右隣を押している間、SYSTEMを開きます。
+- Spaceは短押しで空白、長押しでNAVIGATION。Backspaceは短押しで文字削除、長押しでNUM_SYSです。Enterは短押しでEnter、長押しでOS別のFUNCTIONです。
+- Mac／Windows OPSは削除済み。必要なショートカットをMAC_FUNCTION／WIN_FUNCTIONの左側に配置しました。絵文字・全画面撮影・強制終了画面は配置していません。
+- NUM_SYSは左側に数字・四則演算・＝・小数点・カンマ、右側に対応する数字のShift記号を配置しています。左端は上から＝・小数点・カンマ、左下2キーは／・＊です。数字と＋・−の位置は維持しています。NUM保持中は左下2キーの修飾キーが／・＊に置き換わります。0は左下段の右端です。NUM_SYSの専用左右Shiftは外しました。
+- NAVIGATIONは左側に引用符・セミコロン・コロン・括弧・バッククォート・波線・バックスラッシュ・パイプ、右側に矢印・PgUp／PgDn・Home／End・Insert・Pauseを配置。Backspace位置がDelete、Enter位置を保持するとSYSTEMです。左内側には範囲選択用のShiftを残しています。
+- Enterを長押しするとMacではMAC_FUNCTION、WindowsではWIN_FUNCTION。F1〜F12は右手側の右4列×3行です。左内側はベースで無効、右内側は保持中だけマウスレイヤーを開きます。
+- SYMBOLSを削除しました。数字のShift記号以外の括弧・引用符などはNAVIGATION左側に配置しています。ベースの句読点は維持しています。
+- 英数はF＋G、かなはH＋J、EscはQ＋Wのコンボです（両OSのベースのみ、50ms判定）。
+- Windows右下は右Ctrl、その左はTab。WindowsのSpace左隣は左Ctrl、元Tab位置の左下はAltです。Macも右下の端から2番目がTabで、元Tab位置はOptionです。MacのSpace左隣はCmdを維持しています。Mac右下は無効です。MacのEscはQ＋Wコンボで入力します。
+- FUNCTION左側はQ/W/E/R/T＝全画面（Windowsは最大化）／行頭／ウィンドウ一覧／行末／最小化（Windowsは復元・最小化）、A/S/D/F/G＝画面ロック／前のデスクトップ／タブ復元／次のデスクトップ／範囲スクショ。ZはMacでアプリ終了、Windowsでウィンドウを閉じる操作。MacのXはアプリ内一覧、WindowsのCはデスクトップ表示です。
+- マウス操作は右端2列。O＝戻る、P＝進む、L＝左クリック、−＝右クリック。右トラックボール操作で1秒間自動で有効になり、右内側キーからも開けます。戻る・進むはOSに合わせて自動切り替えします。その間O/P/L/−は文字入力になりません。カーソル移動は保持不要です。オートマウスはキー入力後200msの待機条件を維持し、O/P/L/−は解除対象から除外しています。
+- SYSTEMの「BT All」は1.5秒長押しで全Bluetooth接続設定を消去します。「BT Clr」は単押しです。
+- 灰色は透過を示します。ただしベースの左内側、Mac右下の空きキーは無効です。
 
 [![Pyuron キーマップ早見表](docs/keymap-cheatsheet.jpg)](docs/keymap-cheatsheet.jpg)
 

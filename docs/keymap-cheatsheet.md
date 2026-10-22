@@ -16,14 +16,14 @@
 | 番号 | レイヤー | 使い方 |
 | --- | --- | --- |
 | 0 | `MAC_BASE` | Mac用の通常入力 |
-| 1 | `MAC_OPS` | Mac用操作レイヤー。`MAC_BASE` の `Enter` 長押し |
-| 2 | `WIN_BASE` | Windows用の通常入力 |
-| 3 | `WIN_OPS` | Windows用操作レイヤー。`WIN_BASE` の `Enter` 長押し |
-| 4 | `NUM_SYS` | 数字・記号・カーソル。Baseの `Space` 長押し |
-| 5 | `SYSTEM` | Bluetooth・OS切替・Bootloader。NUM_SYSのDelete右隣を押している間だけ有効。離すと戻る |
-| 6 | `SYMBOLS` | 元英数キーを保持。US記号27種類。数字のShift記号を維持し、右側は左詰め |
-| 7 | `FUNCTION` | 元かなキーを保持。右手側4列×3行にF1〜F12 |
-| 8 | `MOUSE` | マウスクリック用。右トラックボールを動かすと1秒間自動で有効 |
+| 1 | `WIN_BASE` | Windows用の通常入力 |
+| 2 | `NUM_SYS` | Backspace長押し。左に数字・四則演算、右に対応するShift記号 |
+| 3 | `NAVIGATION` | Space長押し。左に記号、右に矢印・ページ移動・Delete。Enter位置を保持してSYSTEMへ |
+| 4 | `MAC_FUNCTION` | MacのEnter長押し。左にショートカット、右にF1〜F12。アプリ内一覧はApp Exposé |
+| 5 | `WIN_FUNCTION` | WindowsのEnter長押し。左にショートカット、右にF1〜F12 |
+| 6 | `SYSTEM` | NAVのEnter位置を保持。Bluetooth・OS切替・Bootloader |
+| 7 | `MAC_MOUSE` | 右トラックボールで自動有効（1秒）。右内側キーでも開けます。O/Pで戻る/進む、L/−で左/右クリック |
+| 8 | `WIN_MOUSE` | Windowsとマウス層が有効なとき自動適用。配置はMacと共通 |
 
 ## 読み方
 
@@ -33,10 +33,10 @@
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
-- 右トラックボールはカーソル移動用で、動かすと `MOUSE` が1秒間有効になります。
+- 右トラックボールは常時カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
 - コンボ: `Q + W -> Esc (MAC_BASE, WIN_BASE)`
-- コンボ: `D + F -> Eisu (MAC_BASE, WIN_BASE)`
-- コンボ: `J + K -> Kana (MAC_BASE, WIN_BASE)`
+- コンボ: `F + G -> Eisu (MAC_BASE, WIN_BASE)`
+- コンボ: `H + J -> Kana (MAC_BASE, WIN_BASE)`
 
 ## MAC_BASE
 
@@ -44,17 +44,8 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z / hold Shift | X | C | V | B | Fn / hold |  | Symbols / hold | N | M | , | . | / / hold RShift |
-| Tab | Ctrl |  |  | Cmd | Space / hold Num |  | Bspc | Enter / hold Mac Ops |  |  | Cmd | Esc |
-
-## MAC_OPS
-
-| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Ctrl+Cmd+Space | 行頭 / Cmd+Left | Mission Control / Ctrl+Up | 行末 / Cmd+Right | trns |  |  |  | trns | 戻る / Cmd+[ | 進む / Cmd+] | フルスクリーン / Ctrl+Cmd+F | 画面ロック / Cmd+Ctrl+Q |
-| trns | デスクトップ移動 / Ctrl+Left | 閉じたタブを復元 / Shift+Cmd+T | デスクトップ移動 / Ctrl+Right | 全画面スクショ / Cmd+Shift+3 |  |  |  | 強制終了 / Alt+Cmd+Esc | trns | 最小化 / Cmd+M | trns | trns |
-| trns | trns | App Exposé / Ctrl+Down | trns | 範囲スクショ / Cmd+Shift+4 | trns |  | trns | trns | trns | trns | trns | trns |
-| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Cmd+Q |
+| Z / hold Shift | X | C | V | B | trns |  | Mouse / hold | N | M | , | . | / / hold RShift |
+| Option | Ctrl |  |  | Cmd | Space / hold Nav |  | Bspc / hold Num | Enter / hold Mac Fn |  |  | Tab | trns |
 
 ## WIN_BASE
 
@@ -62,26 +53,44 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z / hold Shift | X | C | V | B | Fn / hold |  | Symbols / hold | N | M | , | . | / / hold RShift |
-| Tab | Win |  |  | Alt | Space / hold Num |  | Bspc | Enter / hold Win Ops |  |  | Ctrl | Right Ctrl |
-
-## WIN_OPS
-
-| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 絵文字/記号 / Win+. | 行頭 / Home | タスクビュー / Win+Tab | 行末 / End | デスクトップ表示 / Win+D |  |  |  | trns | 戻る / Alt+Left | 進む / Alt+Right | 最大化 / Win+Up | 画面ロック / Win+L |
-| trns | デスクトップ移動 / Ctrl+Win+Left | 閉じたタブを復元 / Ctrl+Shift+T | デスクトップ移動 / Ctrl+Win+Right | 範囲スクショ / Win+Shift+S |  |  |  | タスクマネージャ / Ctrl+Shift+Esc | trns | 最小化 / Win+Down | trns | trns |
-| trns | trns | trns | trns | スクショ / PrtSc | trns |  | trns | trns | trns | trns | trns | trns |
-| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | 終了 / Alt+F4 |
+| Z / hold Shift | X | C | V | B | trns |  | Mouse / hold | N | M | , | . | / / hold RShift |
+| Alt | Win |  |  | Ctrl | Space / hold Nav |  | Bspc / hold Num | Enter / hold Win Fn |  |  | Tab | Right Ctrl |
 
 ## NUM_SYS
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| / | 1 | 2 | 3 | - |  |  |  | PgUp | Up | PgDn | Ins | Pause |
-| * | 4 | 5 | 6 | + |  |  |  | Left | Down | Right | Home | End |
-| = | 7 | 8 | 9 | 0 | Shift |  | RShift | trns | trns | trns | trns | trns |
-| . | trns |  |  | trns | trns |  | Del | Sys / hold |  |  | trns | trns |
+| = | 1 | 2 | 3 | - |  |  |  | trns | ! | @ | # | trns |
+| . | 4 | 5 | 6 | + |  |  |  | trns | $ | % | ^ | trns |
+| , | 7 | 8 | 9 | 0 | trns |  | trns | trns | &amp; | * | ( | ) |
+| / | * |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
+
+## NAVIGATION
+
+| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ' | " | ; | : | &#96; |  |  |  | PgUp | Up | PgDn | Ins | Pause |
+| [ | ] | { | } | ~ |  |  |  | Left | Down | Right | Home | End |
+| &#92; | &#124; | trns | trns | trns | Shift |  | trns | trns | trns | trns | trns | trns |
+| trns | trns |  |  | trns | trns |  | Del | Sys / hold |  |  | trns | trns |
+
+## MAC_FUNCTION
+
+| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 全画面 / Ctrl+Cmd+F | 行頭 / Cmd+Left | ウィンドウ一覧 / Ctrl+Up | 行末 / Cmd+Right | 最小化 / Cmd+M |  |  |  | trns | F1 | F2 | F3 | F4 |
+| 画面ロック / Cmd+Ctrl+Q | 前のデスクトップ / Ctrl+Left | タブ復元 / Shift+Cmd+T | 次のデスクトップ / Ctrl+Right | 範囲スクショ / Cmd+Shift+4 |  |  |  | trns | F5 | F6 | F7 | F8 |
+| アプリ終了 / Cmd+Q | アプリ内一覧 / Ctrl+Down | trns | trns | trns | trns |  | trns | trns | F9 | F10 | F11 | F12 |
+| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
+
+## WIN_FUNCTION
+
+| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 最大化 / Win+Up | 行頭 / Home | ウィンドウ一覧 / Win+Tab | 行末 / End | 復元／最小化 / Win+Down |  |  |  | trns | F1 | F2 | F3 | F4 |
+| 画面ロック / Win+L | 前のデスクトップ / Ctrl+Win+Left | タブ復元 / Ctrl+Shift+T | 次のデスクトップ / Ctrl+Win+Right | 範囲スクショ / Win+Shift+S |  |  |  | trns | F5 | F6 | F7 | F8 |
+| 閉じる / Alt+F4 | trns | デスクトップ表示 / Win+D | trns | trns | trns |  | trns | trns | F9 | F10 | F11 | F12 |
+| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
 
 ## SYSTEM
 
@@ -92,29 +101,20 @@
 | trns | trns | trns | trns | trns | trns |  | Boot | trns | trns | trns | BT Clr | BT All / hold 1.5s |
 | trns | trns |  |  | trns | trns |  | trns | Sys / hold |  |  | trns | trns |
 
-## SYMBOLS
+## MAC_MOUSE
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ? | ! | @ | # | trns |  |  |  | [ | ] | { | } | &#92; |
-| ' | $ | % | ^ | _ |  |  |  | ; | : | &#124; | < | > |
-| " | &amp; | * | ( | ) | trns |  | trns | &#96; | ~ | , | trns | trns |
+| trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | 戻る / Cmd+[ | 進む / Cmd+] |
+| trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | LClick | RClick |
+| trns | trns | trns | trns | trns | trns |  | trns | trns | trns | trns | trns | trns |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
 
-## FUNCTION
+## WIN_MOUSE
 
 | x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| trns | trns | trns | trns | trns |  |  |  | F1 | F2 | F3 | F4 | trns |
-| trns | trns | trns | trns | trns |  |  |  | F5 | F6 | F7 | F8 | trns |
-| trns | trns | trns | trns | trns | trns |  | trns | F9 | F10 | F11 | F12 | trns |
-| trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
-
-## MOUSE
-
-| x0 | x1 | x2 | x3 | x4 | x5 | x6 | x7 | x8 | x9 | x10 | x11 | x12 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | trns | trns |
-| trns | trns | trns | trns | trns |  |  |  | trns | trns | LClick | RClick | trns |
+| trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | 戻る / Alt+Left | 進む / Alt+Right |
+| trns | trns | trns | trns | trns |  |  |  | trns | trns | trns | LClick | RClick |
 | trns | trns | trns | trns | trns | trns |  | trns | trns | trns | trns | trns | trns |
 | trns | trns |  |  | trns | trns |  | trns | trns |  |  | trns | trns |
