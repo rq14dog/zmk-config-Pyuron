@@ -137,8 +137,8 @@ SHORTCUT_LABELS: dict[str, dict[str, str]] = {
 }
 
 LAYER_NAMES = {
-    "0": "Mac", "1": "Win", "2": "Num", "3": "Nav",
-    "4": "Mac Fn", "5": "Win Fn", "6": "Sys", "7": "Mouse", "8": "Win Mouse",
+    "0": "Mac", "1": "Win", "2": "Mouse", "3": "Win Mouse",
+    "4": "Num", "5": "Nav", "6": "Mac Fn", "7": "Win Fn", "8": "Sys", "9": "Scroll",
 }
 
 LAYER_NOTES = {
@@ -146,6 +146,7 @@ LAYER_NOTES = {
     "NUM_SYS": "Backspace hold", "NAVIGATION": "Space hold",
     "MAC_FUNCTION": "Enter hold", "WIN_FUNCTION": "Enter hold",
     "SYSTEM": "Nav: hold Sys",
+    "SCROLL": "hold LClick + RClick: right ball vertical scroll",
     "MAC_MOUSE": "trackball auto (1s) / inner key hold",
     "WIN_MOUSE": "trackball auto (1s) / inner key hold",
 }
@@ -153,7 +154,7 @@ LAYER_NOTES = {
 LAYER_GROUP = {
     "MAC_BASE": "mac", "WIN_BASE": "win", "NUM_SYS": "utility",
     "NAVIGATION": "utility", "MAC_FUNCTION": "mac", "WIN_FUNCTION": "win",
-    "SYSTEM": "utility", "MAC_MOUSE": "mac", "WIN_MOUSE": "win",
+    "SYSTEM": "utility", "MAC_MOUSE": "mac", "WIN_MOUSE": "win", "SCROLL": "utility",
 }
 
 LAYER_DESCRIPTIONS = {
@@ -163,15 +164,16 @@ LAYER_DESCRIPTIONS = {
     "MAC_FUNCTION": "MacのEnter長押し。左にショートカット、右にF1〜F12。アプリ内一覧はApp Exposé",
     "WIN_FUNCTION": "WindowsのEnter長押し。左にショートカット、右にF1〜F12",
     "SYSTEM": "NAVのEnter位置を保持。Bluetooth・OS切替・Bootloader",
+    "SCROLL": "マウス層で左右クリックを同時に保持すると右ボールが縦スクロール。片方を離すと解除",
     "MAC_MOUSE": "右トラックボールで自動有効（1秒）。右内側キーでも開けます。O/Pで戻る/進む、L/−で左/右クリック",
     "WIN_MOUSE": "Windowsとマウス層が有効なとき自動適用。配置はMacと共通",
 }
 
 LAYER_GRID = [
     ["MAC_BASE", "WIN_BASE"], ["NUM_SYS", "NAVIGATION"],
-    ["MAC_FUNCTION", "WIN_FUNCTION"], ["MAC_MOUSE", "WIN_MOUSE"], ["SYSTEM", None],
+    ["MAC_FUNCTION", "WIN_FUNCTION"], ["MAC_MOUSE", "WIN_MOUSE"], ["SYSTEM", "SCROLL"], [None],
 ]
-DOC_LAYER_ORDER = ["MAC_BASE", "WIN_BASE", "NUM_SYS", "NAVIGATION", "MAC_FUNCTION", "WIN_FUNCTION", "SYSTEM", "MAC_MOUSE", "WIN_MOUSE"]
+DOC_LAYER_ORDER = ["MAC_BASE", "WIN_BASE", "MAC_MOUSE", "WIN_MOUSE", "NUM_SYS", "NAVIGATION", "MAC_FUNCTION", "WIN_FUNCTION", "SYSTEM", "SCROLL"]
 
 MARGIN = 50
 COLUMN_GAP = 40
@@ -260,7 +262,8 @@ def display_primary(label: "Label") -> str:
 def combo_description(combo_positions: list[int], target_binding: str, base_labels: list["Label"], scope: list[str]) -> str:
     key_names = [display_primary(base_labels[position]) for position in combo_positions]
     target = label_for(target_binding, scope[0] if scope else "MAC_BASE")
-    suffix = f" ({', '.join(scope)})" if scope else " (all layers)"
+    scope_text = "base + mouse" if set(scope) == {"MAC_BASE", "WIN_BASE", "MAC_MOUSE", "WIN_MOUSE"} else ", ".join(scope)
+    suffix = f" ({scope_text})" if scope else " (all layers)"
     return f"{' + '.join(key_names)} -> {display_primary(target)}{suffix}"
 
 
@@ -303,6 +306,12 @@ def label_for(binding: str, layer_name: str) -> Label:
         return Label("")
     behavior = parts[0]
 
+    if behavior in {"&eisu_input", "&kana_input"}:
+        return Label("Eisu" if behavior == "&eisu_input" else "Kana")
+    if behavior == "&mo_mouse":
+        return Label("Mouse", hint="hold", kind="layer")
+    if behavior == "&exit_hold":
+        return Label("アプリ終了" if layer_name.startswith("MAC") else "閉じる", hint="hold 1s", kind="system")
     if behavior == "&bt_clear_hold":
         return Label("BT All", hint="hold 1.5s", kind="system")
     if behavior == "&none":
@@ -543,9 +552,12 @@ def draw_layer(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, labels: lis
 
 
 def draw_combo_overlays(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, positions: list[dict[str, int]], combos: list[tuple[list[int], str, list[str]]]) -> None:
-    if name not in {"MAC_BASE", "WIN_BASE"}:
+    if name not in {"MAC_BASE", "WIN_BASE", "MAC_MOUSE", "WIN_MOUSE"}:
         return
     palette = {"&kp LANG2": ("#176aa1", "#e0f3ff", "英数"), "&kp LANG1": ("#7147b7", "#f1e8ff", "かな"), "&kp ESC": ("#bd4c14", "#fff0df", "Esc"), "&kp LGUI": ("#7147b7", "#f1e8ff", "Win"), "&kp RCTRL": ("#176aa1", "#e0f3ff", "右Ctrl")}
+    palette["&eisu_input"] = palette["&kp LANG2"]
+    palette["&kana_input"] = palette["&kp LANG1"]
+    palette["&mo 9"] = ("#176aa1", "#e0f3ff", "Scroll hold")
     for keys, target, scope in combos:
         if (scope and name not in scope) or target not in palette or len(keys) != 2:
             continue
@@ -688,7 +700,10 @@ def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
-- 右トラックボールは常時カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
+- 右トラックボールは通常カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
+- マウス層で左右クリック（L＋−）を50ms以内に同時押しし、保持中は右ボールが縦スクロールになります。片方を離すとカーソル移動へ戻ります。単独クリックには最大50msの判定待ちが入ります。
+- 英数・かなコンボは入力切替後にオートマウス層を解除します。Mouseキー保持中は解除せず、離すと解除します。
+- NUM・NAV・FUNCTION・SYSTEMはマウス層より優先され、その間は英数・かなコンボを判定しません。
 {combo_lines}
 
 {layer_sections}

@@ -3,20 +3,31 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-#define MOUSE 7
-
-&mt {
-    flavor = "balanced";
-    quick-tap-ms = <0>;
-};
+#define MOUSE 2
 
 &zip_temp_layer {
-    excluded-positions = <8 9 18 19>;
+    excluded-positions = <8 9 18 19 25 26 32 33 34 39>;
     require-prior-idle-ms = <200>;
 };
 
 / {
     behaviors {
+        // Manual hold must survive automatic timeouts and non-excluded key presses.
+        mo_mouse: mo_mouse {
+            compatible = "zmk,behavior-momentary-layer";
+            #binding-cells = <1>;
+            locking;
+        };
+
+        // Require a full hold so a brief press cannot close the active work.
+        exit_hold: exit_hold {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <1000>;
+            bindings = <&kp>, <&none>;
+        };
+
         // Destructive action must wait for the full hold even if another key is pressed.
         bt_clear_hold: bt_clear_hold {
             compatible = "zmk,behavior-hold-tap";
@@ -40,21 +51,45 @@
         combo_eisu {
             timeout-ms = <50>;
             key-positions = <13 14>;
-            bindings = <&kp LANG2>;
-            layers = <0 1>;
+            bindings = <&eisu_input>;
+            layers = <0 1 2 3>;
         };
 
         combo_kana {
             timeout-ms = <50>;
             key-positions = <15 16>;
-            bindings = <&kp LANG1>;
-            layers = <0 1>;
+            bindings = <&kana_input>;
+            layers = <0 1 2 3>;
         };
 
+        combo_scroll {
+            timeout-ms = <50>;
+            key-positions = <18 19>;
+            bindings = <&mo 9>;
+            layers = <2 3>;
+        };
 
     };
 
     macros {
+        kana_input: kana_input {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <30>;
+            // Release through the non-locking behavior, preserving a manual Mouse hold.
+            bindings = <&macro_tap &kp LANG1>, <&macro_release &mo MOUSE>;
+        };
+
+        eisu_input: eisu_input {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <30>;
+            // Release through the non-locking behavior, preserving a manual Mouse hold.
+            bindings = <&macro_tap &kp LANG2>, <&macro_release &mo MOUSE>;
+        };
+
         clear_all_bonds: clear_all_bonds {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -76,11 +111,12 @@
     conditional_layers {
         compatible = "zmk,conditional-layers";
         windows_mouse {
-            if-layers = <1 7>;
-            then-layer = <8>;
+            if-layers = <1 2>;
+            then-layer = <3>;
         };
     };
 
+    // Utility layers override mouse bindings and suppress language combos while active.
     keymap {
         compatible = "zmk,keymap";
 
@@ -88,8 +124,8 @@
             bindings = <
 &kp Q                    &kp W                    &kp E                    &kp R                    &kp T                    &kp Y                    &kp U                    &kp I                    &kp O                    &kp P
 &kp A                    &kp S                    &kp D                    &kp F                    &kp G                    &kp H                    &kp J                    &kp K                    &kp L                    &kp MINUS
-&mt LEFT_SHIFT Z         &kp X                    &kp C                    &kp V                    &kp B                    &none                    &mo 7                    &kp N                    &kp M                    &kp COMMA
-&kp DOT                  &mt RIGHT_SHIFT SLASH    &kp LEFT_ALT             &kp LCTRL                &kp LGUI                 &lt 3 SPACE              &lt 2 BSPC               &lt 4 ENTER              &kp TAB                  &none
+&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &mo_mouse MOUSE          &kp N                    &kp M                    &kp COMMA
+&kp DOT                  &kp SLASH                &kp LEFT_ALT             &kp LCTRL                &kp LGUI                 &lt 5 SPACE              &lt 4 BSPC               &lt 6 ENTER              &kp TAB                  &none
             >;
         };
 
@@ -97,53 +133,8 @@
             bindings = <
 &kp Q                    &kp W                    &kp E                    &kp R                    &kp T                    &kp Y                    &kp U                    &kp I                    &kp O                    &kp P
 &kp A                    &kp S                    &kp D                    &kp F                    &kp G                    &kp H                    &kp J                    &kp K                    &kp L                    &kp MINUS
-&mt LEFT_SHIFT Z         &kp X                    &kp C                    &kp V                    &kp B                    &none                    &mo 7                    &kp N                    &kp M                    &kp COMMA
-&kp DOT                  &mt RIGHT_SHIFT SLASH    &kp LEFT_ALT             &kp LGUI                 &kp LCTRL                &lt 3 SPACE              &lt 2 BSPC               &lt 5 ENTER              &kp TAB                  &kp RCTRL
-            >;
-        };
-
-        NUM_SYS {
-            bindings = <
-&kp EQUAL                &kp N1                   &kp N2                   &kp N3                   &kp MINUS                &trans                   &kp LS(N1)               &kp LS(N2)               &kp LS(N3)               &trans
-&kp DOT                  &kp N4                   &kp N5                   &kp N6                   &kp PLUS                 &trans                   &kp LS(N4)               &kp LS(N5)               &kp LS(N6)               &trans
-&kp COMMA                &kp N7                   &kp N8                   &kp N9                   &kp N0                   &trans                   &trans                   &trans                   &kp LS(N7)               &kp LS(N8)
-&kp LS(N9)               &kp LS(N0)               &kp FSLH                 &kp ASTERISK             &trans                   &trans                   &trans                   &trans                   &trans                   &trans
-            >;
-        };
-
-        NAVIGATION {
-            bindings = <
-&kp SINGLE_QUOTE         &kp LS(SINGLE_QUOTE)     &kp SEMICOLON            &kp LS(SEMICOLON)        &kp GRAVE                &kp PAGE_UP              &kp UP_ARROW             &kp PAGE_DOWN            &kp INSERT               &kp PAUSE_BREAK
-&kp LBKT                 &kp RBKT                 &kp LS(LBKT)             &kp LS(RBKT)             &kp LS(GRAVE)            &kp LEFT                 &kp DOWN_ARROW           &kp RIGHT                &kp HOME                 &kp END
-&kp BACKSLASH            &kp LS(BACKSLASH)        &trans                   &trans                   &trans                   &kp LEFT_SHIFT           &trans                   &trans                   &trans                   &trans
-&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &kp DELETE               &mo 6                    &trans                   &trans
-            >;
-        };
-
-        MAC_FUNCTION {
-            bindings = <
-&kp LC(LG(F))            &kp LG(LEFT_ARROW)       &kp LC(UP_ARROW)         &kp LG(RIGHT_ARROW)      &kp LG(M)                &trans                   &kp F1                   &kp F2                   &kp F3                   &kp F4
-&kp LG(LC(Q))            &kp LC(LEFT)             &kp LS(LG(T))            &kp LC(RIGHT)            &kp LG(LS(NUMBER_4))     &trans                   &kp F5                   &kp F6                   &kp F7                   &kp F8
-&kp LG(Q)                &kp LC(DOWN_ARROW)       &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &kp F9                   &kp F10
-&kp F11                  &kp F12                  &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
-            >;
-        };
-
-        WIN_FUNCTION {
-            bindings = <
-&kp LG(UP)               &kp HOME                 &kp LG(TAB)              &kp END                  &kp LG(DOWN)             &trans                   &kp F1                   &kp F2                   &kp F3                   &kp F4
-&kp LG(L)                &kp LC(LG(LEFT_ARROW))   &kp LC(LS(T))            &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))            &trans                   &kp F5                   &kp F6                   &kp F7                   &kp F8
-&kp LA(F4)               &trans                   &kp LG(D)                &trans                   &trans                   &trans                   &trans                   &trans                   &kp F9                   &kp F10
-&kp F11                  &kp F12                  &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
-            >;
-        };
-
-        SYSTEM {
-            bindings = <
-&trans                   &trans                   &trans                   &trans                   &trans                   &mac_mode                &win_mode                &bt BT_SEL 2             &bt BT_SEL 3             &bt BT_SEL 4
-&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
-&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &bootloader              &trans                   &trans                   &trans
-&bt BT_CLR               &bt_clear_hold 0 0       &trans                   &trans                   &trans                   &trans                   &trans                   &mo 6                    &trans                   &trans
+&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &mo_mouse MOUSE          &kp N                    &kp M                    &kp COMMA
+&kp DOT                  &kp SLASH                &kp LEFT_ALT             &kp LGUI                 &kp LCTRL                &lt 5 SPACE              &lt 4 BSPC               &lt 7 ENTER              &kp TAB                  &kp RCTRL
             >;
         };
 
@@ -162,6 +153,61 @@
 &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &mkp MB1                 &mkp MB2
 &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
 &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
+            >;
+        };
+
+        NUM_SYS {
+            bindings = <
+&kp EQUAL                &kp N1                   &kp N2                   &kp N3                   &kp MINUS                &trans                   &kp LS(N1)               &kp LS(N2)               &kp LS(N3)               &trans
+&kp DOT                  &kp N4                   &kp N5                   &kp N6                   &kp PLUS                 &trans                   &kp LS(N4)               &kp LS(N5)               &kp LS(N6)               &trans
+&kp COMMA                &kp N7                   &kp N8                   &kp N9                   &kp N0                   &trans                   &trans                   &trans                   &kp LS(N7)               &kp LS(N8)
+&kp LS(N9)               &kp LS(N0)               &kp FSLH                 &kp ASTERISK             &trans                   &trans                   &trans                   &trans                   &trans                   &trans
+            >;
+        };
+
+        NAVIGATION {
+            bindings = <
+&kp SINGLE_QUOTE         &kp LS(SINGLE_QUOTE)     &kp SEMICOLON            &kp LS(SEMICOLON)        &kp GRAVE                &kp PAGE_UP              &kp UP_ARROW             &kp PAGE_DOWN            &kp INSERT               &kp PAUSE_BREAK
+&kp LBKT                 &kp RBKT                 &kp LS(LBKT)             &kp LS(RBKT)             &kp LS(GRAVE)            &kp LEFT                 &kp DOWN_ARROW           &kp RIGHT                &kp HOME                 &kp END
+&kp BACKSLASH            &kp LS(BACKSLASH)        &trans                   &trans                   &trans                   &kp LEFT_SHIFT           &trans                   &trans                   &trans                   &trans
+&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &kp DELETE               &mo 8                    &trans                   &trans
+            >;
+        };
+
+        MAC_FUNCTION {
+            bindings = <
+&kp LC(LG(F))            &kp LG(LEFT_ARROW)       &kp LC(UP_ARROW)         &kp LG(RIGHT_ARROW)      &kp LG(M)                &trans                   &kp F1                   &kp F2                   &kp F3                   &kp F4
+&kp LG(LC(Q))            &kp LC(LEFT)             &kp LS(LG(T))            &kp LC(RIGHT)            &kp LG(LS(NUMBER_4))     &trans                   &kp F5                   &kp F6                   &kp F7                   &kp F8
+&trans                   &kp LC(DOWN_ARROW)       &trans                   &trans                   &exit_hold LG(Q) 0       &trans                   &trans                   &trans                   &kp F9                   &kp F10
+&kp F11                  &kp F12                  &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
+            >;
+        };
+
+        WIN_FUNCTION {
+            bindings = <
+&kp LG(UP)               &kp HOME                 &kp LG(TAB)              &kp END                  &kp LG(DOWN)             &trans                   &kp F1                   &kp F2                   &kp F3                   &kp F4
+&kp LG(L)                &kp LC(LG(LEFT_ARROW))   &kp LC(LS(T))            &kp LC(LG(RIGHT_ARROW))  &kp LG(LS(S))            &trans                   &kp F5                   &kp F6                   &kp F7                   &kp F8
+&trans                   &trans                   &kp LG(D)                &trans                   &exit_hold LA(F4) 0      &trans                   &trans                   &trans                   &kp F9                   &kp F10
+&kp F11                  &kp F12                  &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
+            >;
+        };
+
+        SYSTEM {
+            bindings = <
+&trans                   &trans                   &trans                   &trans                   &trans                   &mac_mode                &win_mode                &bt BT_SEL 2             &bt BT_SEL 3             &bt BT_SEL 4
+&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &trans
+&trans                   &trans                   &trans                   &trans                   &trans                   &trans                   &bootloader              &trans                   &trans                   &trans
+&bt BT_CLR               &bt_clear_hold 0 0       &trans                   &trans                   &trans                   &trans                   &trans                   &mo 8                    &trans                   &trans
+            >;
+        };
+
+        // A momentary input-processing mode; ordinary keys keep their bindings.
+        SCROLL {
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
             >;
         };
     };
