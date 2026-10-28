@@ -147,8 +147,8 @@ LAYER_NOTES = {
     "MAC_FUNCTION": "Enter hold", "WIN_FUNCTION": "Enter hold",
     "SYSTEM": "Nav: hold Sys",
     "SCROLL": "hold LClick + RClick: right ball vertical scroll",
-    "MAC_MOUSE": "trackball auto (1s) / inner key hold",
-    "WIN_MOUSE": "trackball auto (1s) / inner key hold",
+    "MAC_MOUSE": "trackball auto (3s)",
+    "WIN_MOUSE": "trackball auto (3s)",
 }
 
 LAYER_GROUP = {
@@ -165,7 +165,7 @@ LAYER_DESCRIPTIONS = {
     "WIN_FUNCTION": "WindowsのEnter長押し。左にショートカット、右にF1〜F12",
     "SYSTEM": "NAVのEnter位置を保持。Bluetooth・OS切替・Bootloader",
     "SCROLL": "マウス層で左右クリックを同時に保持すると右ボールが縦スクロール。片方を離すと解除",
-    "MAC_MOUSE": "右トラックボールで自動有効（1秒）。右内側キーでも開けます。O/Pで戻る/進む、L/−で左/右クリック",
+    "MAC_MOUSE": "右トラックボールで自動有効（停止後3秒）。O/Pで戻る/進む、L/−で左/右クリック",
     "WIN_MOUSE": "Windowsとマウス層が有効なとき自動適用。配置はMacと共通",
 }
 
@@ -308,8 +308,6 @@ def label_for(binding: str, layer_name: str) -> Label:
 
     if behavior in {"&eisu_input", "&kana_input"}:
         return Label("Eisu" if behavior == "&eisu_input" else "Kana")
-    if behavior == "&mo_mouse":
-        return Label("Mouse", hint="hold", kind="layer")
     if behavior == "&exit_hold":
         return Label("アプリ終了" if layer_name.startswith("MAC") else "閉じる", hint="hold 1s", kind="system")
     if behavior == "&bt_clear_hold":
@@ -572,6 +570,8 @@ def draw_combo_overlays(draw: ImageDraw.ImageDraw, x: int, y: int, name: str, po
         center = (left + right) / 2
         width = max(80, text_size(draw, text, FONTS["key"])[0] + 24)
         badge = (center - width / 2, top + KEY_H - 27, center + width / 2, top + KEY_H + 4)
+        if target == "&mo 9":
+            badge = (center - width / 2, top - 12, center + width / 2, top + 19)
         draw.rounded_rectangle(badge, radius=15, fill=fill, outline=stroke, width=3)
         centered_text(draw, badge, text, FONTS["key"], stroke)
 
@@ -598,7 +598,7 @@ def draw_legend(draw: ImageDraw.ImageDraw, x: int, y: int, combo_notes: list[str
         ("Tap / hold:", "big label = tap, small label = hold"),
         ("Layer access:", "Space hold -> Nav,  Backspace hold -> Num"),
         ("", "Nav: hold Sys -> System; Enter hold -> Fn"),
-        ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (1s); inner key = Mouse"),
+        ("Trackballs:", "left = vertical scroll only,  right = cursor + Mouse (3s); inner keys = Shift"),
         *(("Combo:" if index == 0 else "", note) for index, note in enumerate(combo_notes)),
         ("OS switch:", "Mac mode = BT 0 + Mac,  Win mode = BT 1 + Win (SYSTEM layer)"),
     ]
@@ -700,9 +700,9 @@ def render_markdown(layers: dict[str, list[str]], positions: list[dict[str, int]
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
-- 右トラックボールは通常カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
-- マウス層で左右クリック（L＋−）を50ms以内に同時押しし、保持中は右ボールが縦スクロールになります。片方を離すとカーソル移動へ戻ります。単独クリックには最大50msの判定待ちが入ります。
-- 英数・かなコンボは入力切替後にオートマウス層を解除します。Mouseキー保持中は解除せず、離すと解除します。
+- 右トラックボールは通常カーソル移動用です。右トラックボール操作でマウスレイヤーが停止後3秒間まで自動で有効になります。Windowsでは戻る・進むがWindows用になります。
+- マウス層で左右クリック（L＋−）を50ms以内に同時押しし、保持中は右ボールが縦スクロールになります（従来と上下逆方向）。片方を離すとカーソル移動へ戻ります。単独クリックには最大50msの判定待ちが入ります。
+- 英数・かなコンボは入力切替後にオートマウス層を解除します。右内側は専用右Shiftです。
 - NUM・NAV・FUNCTION・SYSTEMはマウス層より優先され、その間は英数・かなコンボを判定しません。
 {combo_lines}
 

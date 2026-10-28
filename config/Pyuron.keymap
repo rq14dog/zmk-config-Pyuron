@@ -12,13 +12,6 @@
 
 / {
     behaviors {
-        // Manual hold must survive automatic timeouts and non-excluded key presses.
-        mo_mouse: mo_mouse {
-            compatible = "zmk,behavior-momentary-layer";
-            #binding-cells = <1>;
-            locking;
-        };
-
         // Require a full hold so a brief press cannot close the active work.
         exit_hold: exit_hold {
             compatible = "zmk,behavior-hold-tap";
@@ -50,14 +43,14 @@
 
         combo_eisu {
             timeout-ms = <50>;
-            key-positions = <13 14>;
+            key-positions = <11 12>;
             bindings = <&eisu_input>;
             layers = <0 1 2 3>;
         };
 
         combo_kana {
             timeout-ms = <50>;
-            key-positions = <15 16>;
+            key-positions = <17 18>;
             bindings = <&kana_input>;
             layers = <0 1 2 3>;
         };
@@ -77,7 +70,7 @@
             #binding-cells = <0>;
             wait-ms = <0>;
             tap-ms = <30>;
-            // Release through the non-locking behavior, preserving a manual Mouse hold.
+            // Return to typing immediately after selecting the input language.
             bindings = <&macro_tap &kp LANG1>, <&macro_release &mo MOUSE>;
         };
 
@@ -86,7 +79,7 @@
             #binding-cells = <0>;
             wait-ms = <0>;
             tap-ms = <30>;
-            // Release through the non-locking behavior, preserving a manual Mouse hold.
+            // Return to typing immediately after selecting the input language.
             bindings = <&macro_tap &kp LANG2>, <&macro_release &mo MOUSE>;
         };
 
@@ -124,7 +117,7 @@
             bindings = <
 &kp Q                    &kp W                    &kp E                    &kp R                    &kp T                    &kp Y                    &kp U                    &kp I                    &kp O                    &kp P
 &kp A                    &kp S                    &kp D                    &kp F                    &kp G                    &kp H                    &kp J                    &kp K                    &kp L                    &kp MINUS
-&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &mo_mouse MOUSE          &kp N                    &kp M                    &kp COMMA
+&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &kp RIGHT_SHIFT          &kp N                    &kp M                    &kp COMMA
 &kp DOT                  &kp SLASH                &kp LEFT_ALT             &kp LCTRL                &kp LGUI                 &lt 5 SPACE              &lt 4 BSPC               &lt 6 ENTER              &kp TAB                  &none
             >;
         };
@@ -133,7 +126,7 @@
             bindings = <
 &kp Q                    &kp W                    &kp E                    &kp R                    &kp T                    &kp Y                    &kp U                    &kp I                    &kp O                    &kp P
 &kp A                    &kp S                    &kp D                    &kp F                    &kp G                    &kp H                    &kp J                    &kp K                    &kp L                    &kp MINUS
-&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &mo_mouse MOUSE          &kp N                    &kp M                    &kp COMMA
+&kp Z                    &kp X                    &kp C                    &kp V                    &kp B                    &kp LEFT_SHIFT           &kp RIGHT_SHIFT          &kp N                    &kp M                    &kp COMMA
 &kp DOT                  &kp SLASH                &kp LEFT_ALT             &kp LGUI                 &kp LCTRL                &lt 5 SPACE              &lt 4 BSPC               &lt 7 ENTER              &kp TAB                  &kp RCTRL
             >;
         };

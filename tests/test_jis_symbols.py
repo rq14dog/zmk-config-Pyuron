@@ -18,14 +18,14 @@ class SharedUsLayout(unittest.TestCase):
     def test_layer_routes(self):
         self.assertEqual(list(self.layers), ['MAC_BASE', 'WIN_BASE', 'MAC_MOUSE', 'WIN_MOUSE', 'NUM_SYS', 'NAVIGATION', 'MAC_FUNCTION', 'WIN_FUNCTION', 'SYSTEM', 'SCROLL'])
         for name in ('MAC_BASE', 'WIN_BASE'):
-            for position, binding in {25: '&kp LEFT_SHIFT', 26: '&mo_mouse MOUSE', 35: '&lt 5 SPACE', 36: '&lt 4 BSPC', 37: ('&lt 6 ENTER' if name == 'MAC_BASE' else '&lt 7 ENTER')}.items():
+            for position, binding in {25: '&kp LEFT_SHIFT', 26: '&kp RIGHT_SHIFT', 35: '&lt 5 SPACE', 36: '&lt 4 BSPC', 37: ('&lt 6 ENTER' if name == 'MAC_BASE' else '&lt 7 ENTER')}.items():
                 self.assertEqual(self.layers[name][position], binding)
         self.assertIn('<&to 1>', self.source)
         self.assertIn('#define MOUSE 2', self.source)
-        self.assertIn('<&zip_temp_layer 2 1000>', (ROOT / 'config/boards/shields/Pyuron/Pyuron.dtsi').read_text())
+        self.assertIn('<&zip_temp_layer 2 3000>', (ROOT / 'config/boards/shields/Pyuron/Pyuron.dtsi').read_text())
 
     def test_combos_follow_base_layers(self):
-        for name, positions, key in [('esc', '0 1', '&kp ESC'), ('eisu', '13 14', '&eisu_input'), ('kana', '15 16', '&kana_input')]:
+        for name, positions, key in [('esc', '0 1', '&kp ESC'), ('eisu', '11 12', '&eisu_input'), ('kana', '17 18', '&kana_input')]:
             body = re.search(r'combo_' + name + r' \{(.*?)\};', self.source, re.S)[1]
             for expected in [f'key-positions = <{positions}>;', f'bindings = <{key}>;', ('layers = <0 1>;' if name == 'esc' else 'layers = <0 1 2 3>;'), 'timeout-ms = <50>;']:
                 self.assertIn(expected, body)
@@ -112,10 +112,10 @@ class SharedUsLayout(unittest.TestCase):
         self.assertEqual(label_for('&exit_hold LG(Q) 0','MAC_FUNCTION').hint, 'hold 1s')
         self.assertEqual(label_for('&exit_hold LA(F4) 0','WIN_FUNCTION').primary, '閉じる')
 
-    def test_mouse_hold_lock_and_language_exit(self):
-        behavior = re.search(r'mo_mouse:.*?\n        };', self.source, re.S)[0]
-        self.assertIn('compatible = "zmk,behavior-momentary-layer";', behavior)
-        self.assertIn('locking;', behavior)
+    def test_right_shift_and_language_exit(self):
+        self.assertNotIn('mo_mouse:', self.source)
+        for name in ('MAC_BASE', 'WIN_BASE'):
+            self.assertEqual(self.layers[name][26], '&kp RIGHT_SHIFT')
         for name, key in [('eisu_input', 'LANG2'), ('kana_input', 'LANG1')]:
             body = re.search(name + r':.*?\n        };', self.source, re.S)[0]
             self.assertIn('<&macro_tap &kp ' + key + '>', body)
@@ -124,7 +124,6 @@ class SharedUsLayout(unittest.TestCase):
             self.assertNotIn('&to ', body)
             self.assertNotIn('&tog ', body)
         from render_keymap_cheatsheet import label_for
-        self.assertEqual(label_for('&mo_mouse MOUSE','MAC_BASE').primary, 'Mouse')
         self.assertEqual(label_for('&eisu_input','MAC_BASE').primary, 'Eisu')
         self.assertEqual(label_for('&kana_input','WIN_BASE').primary, 'Kana')
 
@@ -156,8 +155,8 @@ class SharedUsLayout(unittest.TestCase):
         self.assertNotIn('process-next', body)
         processors = ['<&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>',
                       '<&zip_xy_scaler 1 16>', '<&zip_xy_to_scroll_mapper>',
-                      '<&zip_scroll_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>',
-                      '<&horizontal_scroll_blocker 0 1>', '<&zip_temp_layer 2 1000>']
+                      '<&zip_scroll_transform INPUT_TRANSFORM_X_INVERT>',
+                      '<&horizontal_scroll_blocker 0 1>', '<&zip_temp_layer 2 3000>']
         offsets = [body.index(processor) for processor in processors]
         self.assertEqual(offsets, sorted(offsets))
         self.assertIn('<&zip_xy_scaler 3 4>', listener.split('scroll_mode')[0])

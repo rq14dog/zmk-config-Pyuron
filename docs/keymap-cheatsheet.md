@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | 0 | `MAC_BASE` | Mac用の通常入力 |
 | 1 | `WIN_BASE` | Windows用の通常入力 |
-| 2 | `MAC_MOUSE` | 右トラックボールで自動有効（1秒）。右内側キーでも開けます。O/Pで戻る/進む、L/−で左/右クリック |
+| 2 | `MAC_MOUSE` | 右トラックボールで自動有効（停止後3秒）。O/Pで戻る/進む、L/−で左/右クリック |
 | 3 | `WIN_MOUSE` | Windowsとマウス層が有効なとき自動適用。配置はMacと共通 |
 | 4 | `NUM_SYS` | Backspace長押し。左に数字・四則演算、右に対応するShift記号 |
 | 5 | `NAVIGATION` | Space長押し。左に記号、右に矢印・ページ移動・Delete。Enter位置を保持してSYSTEMへ |
@@ -34,13 +34,13 @@
 - `Mac / mode` は Bluetooth 0 を選んで `MAC_BASE` へ移動します。
 - `Win / mode` は Bluetooth 1 を選んで `WIN_BASE` へ移動します。
 - 左トラックボールは縦スクロール専用です。横スクロールは出力しません。
-- 右トラックボールは通常カーソル移動用です。右トラックボール操作でマウスレイヤーが1秒間自動で有効になります。右内側キーからも開けます。Windowsでは戻る・進むがWindows用になります。
-- マウス層で左右クリック（L＋−）を50ms以内に同時押しし、保持中は右ボールが縦スクロールになります。片方を離すとカーソル移動へ戻ります。単独クリックには最大50msの判定待ちが入ります。
-- 英数・かなコンボは入力切替後にオートマウス層を解除します。Mouseキー保持中は解除せず、離すと解除します。
+- 右トラックボールは通常カーソル移動用です。右トラックボール操作でマウスレイヤーが停止後3秒間まで自動で有効になります。Windowsでは戻る・進むがWindows用になります。
+- マウス層で左右クリック（L＋−）を50ms以内に同時押しし、保持中は右ボールが縦スクロールになります（従来と上下逆方向）。片方を離すとカーソル移動へ戻ります。単独クリックには最大50msの判定待ちが入ります。
+- 英数・かなコンボは入力切替後にオートマウス層を解除します。右内側は専用右Shiftです。
 - NUM・NAV・FUNCTION・SYSTEMはマウス層より優先され、その間は英数・かなコンボを判定しません。
 - コンボ: `Q + W -> Esc (MAC_BASE, WIN_BASE)`
-- コンボ: `F + G -> Eisu (base + mouse)`
-- コンボ: `H + J -> Kana (base + mouse)`
+- コンボ: `S + D -> Eisu (base + mouse)`
+- コンボ: `K + L -> Kana (base + mouse)`
 - コンボ: `L + - -> Scroll (MAC_MOUSE, WIN_MOUSE)`
 
 ## MAC_BASE
@@ -49,7 +49,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z | X | C | V | B | Shift |  | Mouse / hold | N | M | , | . | / |
+| Z | X | C | V | B | Shift |  | RShift | N | M | , | . | / |
 | Option | Ctrl |  |  | Cmd | Space / hold Nav |  | Bspc / hold Num | Enter / hold Mac Fn |  |  | Tab | trns |
 
 ## WIN_BASE
@@ -58,7 +58,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
-| Z | X | C | V | B | Shift |  | Mouse / hold | N | M | , | . | / |
+| Z | X | C | V | B | Shift |  | RShift | N | M | , | . | / |
 | Alt | Win |  |  | Ctrl | Space / hold Nav |  | Bspc / hold Num | Enter / hold Win Fn |  |  | Tab | Right Ctrl |
 
 ## MAC_MOUSE
