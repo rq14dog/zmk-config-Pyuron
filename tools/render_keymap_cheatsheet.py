@@ -301,6 +301,8 @@ def is_shortcut(primary: str) -> bool:
 
 
 def label_for(binding: str, layer_name: str) -> Label:
+    if binding == "&kp LC(LG(SPACE))" and layer_name == "MAC_BASE":
+        return Label("音声入力", hint="Ctrl+Cmd+Space", kind="mod")
     parts = binding.split()
     if not parts:
         return Label("")

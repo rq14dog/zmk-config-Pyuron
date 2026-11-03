@@ -57,7 +57,7 @@ class SharedUsLayout(unittest.TestCase):
 
     def test_controls_and_function_keys(self):
         self.assertEqual(self.layers['WIN_BASE'][38:40], ['&kp TAB','&kp RCTRL'])
-        self.assertEqual(self.layers['MAC_BASE'][39], '&none')
+        self.assertEqual(self.layers['MAC_BASE'][39], '&kp LC(LG(SPACE))')
         for position,number in zip([6,7,8,9,16,17,18,19,28,29,30,31],range(1,13)):
             for name in ('MAC_FUNCTION', 'WIN_FUNCTION'):
                 self.assertEqual(self.layers[name][position], f'&kp F{number}')

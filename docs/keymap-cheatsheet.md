@@ -50,7 +50,7 @@
 | Q | W | E | R | T |  |  |  | Y | U | I | O | P |
 | A | S | D | F | G |  |  |  | H | J | K | L | - |
 | Z | X | C | V | B | Shift |  | RShift | N | M | , | . | / |
-| Option | Ctrl |  |  | Cmd | Space / hold Nav |  | Bspc / hold Num | Enter / hold Mac Fn |  |  | Tab | trns |
+| Option | Ctrl |  |  | Cmd | Space / hold Nav |  | Bspc / hold Num | Enter / hold Mac Fn |  |  | Tab | 音声入力 / Ctrl+Cmd+Space |
 
 ## WIN_BASE
 
